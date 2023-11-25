@@ -1,5 +1,5 @@
 use crate::clients::country_client;
-use sqlx::{Error, Pool, Sqlite};
+use sqlx::Error;
 
 use super::country_model::SelectCountry;
 

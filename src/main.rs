@@ -1,14 +1,5 @@
-use axum::{extract::Path, routing::get, Error, Router};
-use mysqlx::{
-    clients::{city_client, country_client},
-    models::{
-        city_model::{InsertCity, SelectCity},
-        country_model::{InsertCountry, SelectCountry, UpdateCountry},
-    },
-};
-// use mysqlx::models::country_model::InsertCountry;
-use ::tokio::sync::OnceCell;
-use sqlx::{sqlite::SqlitePoolOptions, Pool, Sqlite};
+use axum::{extract::Path, routing::get, Router};
+use mysqlx::clients::{city_client, country_client};
 
 async fn get_country_by_id(Path(country_id): Path<i64>) -> String {
     let country = country_client::select_country(country_id).await.unwrap();
@@ -20,12 +11,12 @@ async fn get_country_by_id(Path(country_id): Path<i64>) -> String {
 async fn main() -> Result<(), sqlx::Error> {
     mysqlx::db::init_pool().await;
 
-    // let app = Router::new().route("/country/:country_id", get(get_country_by_id));
+    let app = Router::new().route("/country/:country_id", get(get_country_by_id));
 
-    // axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-    //     .serve(app.into_make_service())
-    //     .await
-    //     .unwrap();
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
 
     let some_city = city_client::select_city(2).await?;
     let some_country = some_city.get_country().await?;
