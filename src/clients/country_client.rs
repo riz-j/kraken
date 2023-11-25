@@ -1,4 +1,4 @@
-use crate::models::country_model::{InsertCountry, SelectCountry};
+use crate::models::country_model::{InsertCountry, SelectCountry, UpdateCountry};
 use sqlx::{Error, Pool, Sqlite};
 
 pub async fn insert_country(pool: &Pool<Sqlite>, country: &InsertCountry) -> Result<(), Error> {
@@ -25,4 +25,26 @@ pub async fn select_country(pool: &Pool<Sqlite>, country_id: i64) -> Result<Sele
             .await?;
 
     Ok(country)
+}
+
+pub async fn update_country(
+    pool: &Pool<Sqlite>,
+    country_id: i64,
+    update_country: &UpdateCountry,
+) -> Result<(), Error> {
+    sqlx::query(
+        "
+        UPDATE countries
+        SET name = COALESCE($1, name)
+        WHERE id = $2;
+        ",
+    )
+    .bind(&update_country.name)
+    .bind(country_id)
+    .execute(pool)
+    .await?;
+
+    println!("Country updated!");
+
+    Ok(())
 }

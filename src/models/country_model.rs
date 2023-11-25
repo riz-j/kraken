@@ -8,3 +8,8 @@ pub struct SelectCountry {
 pub struct InsertCountry {
     pub name: String,
 }
+
+#[allow(dead_code)]
+pub struct UpdateCountry {
+    pub name: Option<String>,
+}
