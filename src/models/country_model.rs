@@ -2,13 +2,13 @@
 pub struct SelectCountry {
     pub id: i64,
     pub name: String,
-    pub continent: String,
+    pub continent: Option<String>,
 }
 
 #[allow(dead_code)]
 pub struct InsertCountry {
     pub name: String,
-    pub continent: String,
+    pub continent: Option<String>,
 }
 
 #[allow(dead_code)]

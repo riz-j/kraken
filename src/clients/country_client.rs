@@ -9,7 +9,7 @@ pub async fn insert_country(pool: &Pool<Sqlite>, country: &InsertCountry) -> Res
     ",
     )
     .bind(country.name.to_string())
-    .bind(country.continent.to_string())
+    .bind(&country.continent)
     .execute(pool)
     .await?;
 

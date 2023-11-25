@@ -16,20 +16,20 @@ async fn main() -> Result<(), sqlx::Error> {
     // country_client::insert_country(
     //     &pool,
     //     &InsertCountry {
-    //         name: "Botswana".to_string(),
-    //         continent: "Africa".to_string(),
+    //         name: "Angola".to_string(),
+    //         continent: None,
     //     },
     // )
     // .await?;
 
-    let some_country = country_client::select_country(&pool, 5).await?;
+    let some_country = country_client::select_country(&pool, 7).await?;
     println!("{:?}", some_country);
 
-    let update_country = UpdateCountry {
-        name: None,
-        continent: None,
-    };
-    mysqlx::clients::country_client::update_country(&pool, 2, &update_country).await?;
+    // let update_country = UpdateCountry {
+    //     name: None,
+    //     continent: None,
+    // };
+    // mysqlx::clients::country_client::update_country(&pool, 2, &update_country).await?;
 
     Ok(())
 }
