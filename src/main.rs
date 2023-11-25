@@ -1,5 +1,5 @@
 use axum::{extract::Path, routing::get, Router};
-use mysqlx::clients::{city_client, country_client};
+use kraken::clients::{city_client, country_client};
 
 async fn get_country_by_id(Path(country_id): Path<i64>) -> String {
     let country = country_client::select_country(country_id).await.unwrap();
@@ -9,7 +9,7 @@ async fn get_country_by_id(Path(country_id): Path<i64>) -> String {
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
-    mysqlx::db::init_pool().await;
+    kraken::db::init_pool().await;
 
     let app = Router::new().route("/country/:country_id", get(get_country_by_id));
 
