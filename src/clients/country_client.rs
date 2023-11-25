@@ -1,7 +1,8 @@
+use crate::db;
 use crate::models::country_model::{InsertCountry, SelectCountry, UpdateCountry};
-use sqlx::{Error, Pool, Sqlite};
+use sqlx::Error;
 
-pub async fn insert_country(pool: &Pool<Sqlite>, country: &InsertCountry) -> Result<(), Error> {
+pub async fn insert_country(country: &InsertCountry) -> Result<(), Error> {
     sqlx::query(
         "
         INSERT INTO countries (name, continent)
@@ -10,7 +11,7 @@ pub async fn insert_country(pool: &Pool<Sqlite>, country: &InsertCountry) -> Res
     )
     .bind(country.name.to_string())
     .bind(&country.continent)
-    .execute(pool)
+    .execute(db::POOL.get().unwrap())
     .await?;
 
     println!("Country '{}' has been inserted!", country.name.to_string());
@@ -18,7 +19,7 @@ pub async fn insert_country(pool: &Pool<Sqlite>, country: &InsertCountry) -> Res
     Ok(())
 }
 
-pub async fn select_country(pool: &Pool<Sqlite>, country_id: i64) -> Result<SelectCountry, Error> {
+pub async fn select_country(country_id: i64) -> Result<SelectCountry, Error> {
     let country = sqlx::query_as::<_, SelectCountry>(
         "
         SELECT id, name, continent 
@@ -26,17 +27,13 @@ pub async fn select_country(pool: &Pool<Sqlite>, country_id: i64) -> Result<Sele
         ",
     )
     .bind(country_id)
-    .fetch_one(pool)
+    .fetch_one(db::POOL.get().unwrap())
     .await?;
 
     Ok(country)
 }
 
-pub async fn update_country(
-    pool: &Pool<Sqlite>,
-    country_id: i64,
-    update_country: &UpdateCountry,
-) -> Result<(), Error> {
+pub async fn update_country(country_id: i64, update_country: &UpdateCountry) -> Result<(), Error> {
     sqlx::query(
         "
         UPDATE countries
@@ -49,7 +46,7 @@ pub async fn update_country(
     .bind(&update_country.name)
     .bind(&update_country.continent)
     .bind(country_id)
-    .execute(pool)
+    .execute(db::POOL.get().unwrap())
     .await?;
 
     println!("Country updated!");

@@ -6,3 +6,4 @@ pub mod clients {
     pub mod city_client;
     pub mod country_client;
 }
+pub mod db;

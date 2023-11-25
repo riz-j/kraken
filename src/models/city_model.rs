@@ -18,7 +18,7 @@ pub struct InsertCity {
 }
 
 impl SelectCity {
-    pub async fn get_country(&self, pool: &Pool<Sqlite>) -> Result<SelectCountry, Error> {
-        country_client::select_country(pool, self.country_id.unwrap()).await
+    pub async fn get_country(&self) -> Result<SelectCountry, Error> {
+        country_client::select_country(self.country_id.unwrap()).await
     }
 }
