@@ -1,7 +1,8 @@
+use crate::db;
 use crate::models::city_model::{InsertCity, SelectCity};
-use sqlx::{Error, Pool, Sqlite};
+use sqlx::Error;
 
-pub async fn insert_city(pool: &Pool<Sqlite>, insert_city: &InsertCity) -> Result<(), Error> {
+pub async fn insert_city(insert_city: &InsertCity) -> Result<(), Error> {
     sqlx::query(
         "
         INSERT INTO cities (name, country_id)
@@ -10,7 +11,7 @@ pub async fn insert_city(pool: &Pool<Sqlite>, insert_city: &InsertCity) -> Resul
     )
     .bind(insert_city.name.to_string())
     .bind(insert_city.country_id)
-    .execute(pool)
+    .execute(db::POOL.get().unwrap())
     .await?;
 
     println!("City '{}' has been inserted!", insert_city.name);
@@ -18,7 +19,7 @@ pub async fn insert_city(pool: &Pool<Sqlite>, insert_city: &InsertCity) -> Resul
     Ok(())
 }
 
-pub async fn select_city(pool: &Pool<Sqlite>, city_id: i64) -> Result<SelectCity, Error> {
+pub async fn select_city(city_id: i64) -> Result<SelectCity, Error> {
     let city = sqlx::query_as::<_, SelectCity>(
         "
         SELECT id, name, country_id
@@ -26,7 +27,7 @@ pub async fn select_city(pool: &Pool<Sqlite>, city_id: i64) -> Result<SelectCity
         ",
     )
     .bind(city_id)
-    .fetch_one(pool)
+    .fetch_one(db::POOL.get().unwrap())
     .await?;
 
     Ok(city)

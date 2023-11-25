@@ -18,21 +18,16 @@ async fn get_country_by_id(Path(country_id): Path<i64>) -> String {
 
 #[tokio::main]
 async fn main() -> Result<(), sqlx::Error> {
-    let _pool = mysqlx::db::init_pool().await;
+    mysqlx::db::init_pool().await;
 
-    let app = Router::new().route("/country/:country_id", get(get_country_by_id));
+    // let app = Router::new().route("/country/:country_id", get(get_country_by_id));
 
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+    // axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+    //     .serve(app.into_make_service())
+    //     .await
+    //     .unwrap();
 
-    let db_file = "./my_database.db";
-    let pool = SqlitePoolOptions::new()
-        .connect(&format!("sqlite:{}", db_file))
-        .await?;
-
-    let some_city = city_client::select_city(&pool, 2).await?;
+    let some_city = city_client::select_city(2).await?;
     let some_country = some_city.get_country().await?;
 
     println!("{:?}", some_city);
