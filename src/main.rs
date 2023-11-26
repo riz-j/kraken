@@ -11,6 +11,12 @@ async fn get_country_by_id(Path(country_id): Path<i64>) -> String {
     format!("Country: {:?}", country)
 }
 
+async fn list_countries() -> Json<Vec<SelectCountry>> {
+    let countries = country_client::list_countries().await.unwrap();
+
+    Json(countries)
+}
+
 async fn create_country(Json(payload): Json<InsertCountry>) -> (StatusCode, String) {
     country_client::insert_country(&payload).await.unwrap();
 
@@ -33,6 +39,7 @@ async fn main() -> Result<(), sqlx::Error> {
     kraken::db::init_pool().await;
 
     let app = Router::new()
+        .route("/countries", get(list_countries))
         .route("/country/:country_id", get(get_country_by_id))
         .route("/country", post(create_country))
         .route("/city/:city_id", get(get_city_by_id))

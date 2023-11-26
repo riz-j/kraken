@@ -4,8 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <h1>Hello World! This is a static file</h1>
+    <div id="app">
+        <div class="p-10">
+            <h1 class="text-2xl font-bold">List of Countries</h1>
+            <h1>{{ country }}</h1>
+        </div>
+    </div>
 </body>
+<script>
+    Vue.createApp({
+        data() {
+            return {
+                greeting: "Hello Joe!",
+
+                country: ""
+            }
+        },
+        mounted() {
+            this.populateCountries();
+        },
+        methods: {
+            populateCountries() {
+                fetch("/country/5")
+                    .then(res => res.text())
+                    .then(res => this.country = res);
+            }
+        }
+    }).mount("#app")
+</script>
 </html>
