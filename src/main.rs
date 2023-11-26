@@ -41,9 +41,9 @@ async fn main() -> Result<(), sqlx::Error> {
 
     let app = Router::new()
         .route("/countries", get(list_countries))
-        .route("/country/:country_id", get(get_country_by_id))
+        .route("/countries/:country_id", get(get_country_by_id))
         .route("/countries", post(create_country))
-        .route("/city/:city_id", get(get_city_by_id))
+        .route("/cities/:city_id", get(get_city_by_id))
         .fallback_service(routes_static());
 
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
