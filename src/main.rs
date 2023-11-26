@@ -1,10 +1,19 @@
-use axum::{extract::Path, routing::get, Router};
+use axum::http::StatusCode;
+use axum::routing::post;
+use axum::{extract::Path, routing::get, Json, Router};
 use kraken::clients::{city_client, country_client};
+use kraken::models::country_model::{InsertCountry, SelectCountry};
 
 async fn get_country_by_id(Path(country_id): Path<i64>) -> String {
     let country = country_client::select_country(country_id).await.unwrap();
 
     format!("Country: {:?}", country)
+}
+
+async fn create_country(Json(payload): Json<InsertCountry>) -> (StatusCode, String) {
+    country_client::insert_country(&payload).await.unwrap();
+
+    (StatusCode::CREATED, format!("Created"))
 }
 
 async fn get_city_by_id(Path(city_id): Path<i64>) -> String {
@@ -20,6 +29,7 @@ async fn main() -> Result<(), sqlx::Error> {
 
     let app = Router::new()
         .route("/country/:country_id", get(get_country_by_id))
+        .route("/country", post(create_country))
         .route("/city/:city_id", get(get_city_by_id));
 
     axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
