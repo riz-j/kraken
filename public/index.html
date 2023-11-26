@@ -1,26 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="emerald">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.7/dist/full.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div id="app">
         <div class="flex gap-56 p-10">
             <div>
                 <h1 class="text-2xl font-bold">List of Countries</h1>
-                <h1 v-for="country in countries">
-                    {{ country.name }}
-                </h1>
+                <div class="flex flex-col gap-2">
+                    <div v-for="continent in continents" :key="continent">
+                        <h1 class="text-xl font-bold">{{ continent }}</h1>
+                        <p v-for="country in filteredCountries(continent)" :key="country.id">
+                            {{ country.name }}
+                        </p>
+                    </div>
+                </div>
             </div>
-            <div>
+            <div class="flex flex-col items-start gap-2">
                 <h1 class="text-2xl font-bold">Create new country:</h1>
-                <input v-model="newCountry.name" name="name" placeholder="Name" class="border border-black"/>
-                <input v-model="newCountry.continent" name="name" placeholder="Continent" class="border border-black"/>
-                <button @click="handleSaveCountry">Save Country</button>
+                <input v-model="newCountry.name" name="name" placeholder="Name" class="input input-bordered"/>
+                <input v-model="newCountry.continent" name="name" placeholder="Continent" class="input input-bordered"/>
+                <button @click="handleSaveCountry" class="btn">Save Country</button>
             </div>
         </div>
     </div>
@@ -37,6 +43,11 @@
                     name: "",
                     continent: ""
                 }
+            }
+        },
+        computed: {
+            continents() {
+                return [...new Set(this.countries.map(country => country.continent))];
             }
         },
         mounted() {
@@ -61,6 +72,9 @@
                     ? this.populateCountries() 
                     : console.log("Error saving country")
                 );
+            },
+            filteredCountries(continent) {
+                return this.countries.filter(country => country.continent === continent);
             }
         }
     }).mount("#app")
