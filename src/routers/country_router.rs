@@ -39,10 +39,18 @@ async fn list_countries() -> Result<(StatusCode, Json<Vec<SelectCountry>>), Resp
     }
 }
 
-async fn create_country(Json(payload): Json<InsertCountry>) -> StatusCode {
-    country_client::insert_country(&payload).await.unwrap();
-
-    StatusCode::CREATED
+async fn create_country(Json(payload): Json<InsertCountry>) -> Result<StatusCode, Response> {
+    match country_client::insert_country(&payload).await {
+        Ok(_) => Ok(StatusCode::OK),
+        Err(err) => {
+            println!("--> Error creating country: {}", err);
+            Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({ "message": "Error creating country" })),
+            )
+                .into_response())
+        }
+    }
 }
 
 async fn update_country(
