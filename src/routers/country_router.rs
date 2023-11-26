@@ -48,10 +48,18 @@ async fn update_country(
     StatusCode::NO_CONTENT
 }
 
-async fn delete_country(Path(country_id): Path<i64>) -> StatusCode {
-    country_client::delete_country(country_id).await.unwrap();
-
-    StatusCode::NO_CONTENT
+async fn delete_country(Path(country_id): Path<i64>) -> Response {
+    match country_client::delete_country(country_id).await {
+        Ok(_) => (StatusCode::NO_CONTENT).into_response(),
+        Err(err) => {
+            println!("--> Error deleting country: {}", err);
+            (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({ "message": "Error deleting country" })),
+            )
+                .into_response()
+        }
+    }
 }
 
 pub fn country_router() -> Router {
