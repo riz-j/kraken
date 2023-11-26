@@ -16,7 +16,7 @@
                 <div class="flex flex-col gap-2">
                     <div v-for="continent in continents" :key="continent">
                         <h1 class="text-xl font-bold">{{ continent }}</h1>
-                        <p v-for="country in filteredCountries(continent)" :key="country.id">
+                        <p v-for="country in filteredCountries(continent)" :key="country.id" @click="handleDelete(country.id)" class="cursor-pointer">
                             {{ country.name }}
                         </p>
                     </div>
@@ -75,6 +75,15 @@
                 .then(res => res.ok
                     ? this.populateCountries() 
                     : console.log("Error saving country")
+                );
+            },
+            handleDelete(countryId) {
+                fetch(`/countries/${countryId}`, {
+                    method: "DELETE"
+                })
+                .then(res => res.ok 
+                    ? this.populateCountries() 
+                    : console.log("Error deleting country")
                 );
             },
             filteredCountries(continent) {

@@ -1,7 +1,7 @@
 use axum::{
     extract::Path,
     http::StatusCode,
-    routing::{get, post, put},
+    routing::{delete, get, post, put},
     Json, Router,
 };
 
@@ -39,10 +39,17 @@ async fn update_country(
     StatusCode::NO_CONTENT
 }
 
+async fn delete_country(Path(country_id): Path<i64>) -> StatusCode {
+    country_client::delete_country(country_id).await.unwrap();
+
+    StatusCode::NO_CONTENT
+}
+
 pub fn country_router() -> Router {
     Router::new()
         .route("/countries", get(list_countries))
         .route("/countries/:country_id", get(get_country_by_id))
         .route("/countries", post(create_country))
         .route("/countries/:country_id", put(update_country))
+        .route("/countries/:country_id", delete(delete_country))
 }

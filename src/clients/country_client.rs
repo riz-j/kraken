@@ -66,3 +66,17 @@ pub async fn update_country(country_id: i64, update_country: &UpdateCountry) -> 
 
     Ok(())
 }
+
+pub async fn delete_country(country_id: i64) -> Result<(), Error> {
+    sqlx::query(
+        "
+        DELETE FROM countries
+        WHERE id = $1;
+        ",
+    )
+    .bind(country_id)
+    .execute(db::POOL.get().unwrap())
+    .await?;
+
+    Ok(())
+}
