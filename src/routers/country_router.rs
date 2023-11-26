@@ -1,19 +1,28 @@
 use axum::{
     extract::Path,
     http::StatusCode,
+    response::{IntoResponse, Response},
     routing::{delete, get, post, put},
     Json, Router,
 };
+use serde_json::json;
 
 use crate::{
     clients::country_client,
     models::country_model::{InsertCountry, SelectCountry, UpdateCountry},
 };
 
-async fn get_country_by_id(Path(country_id): Path<i64>) -> Json<SelectCountry> {
-    let country = country_client::select_country(country_id).await.unwrap();
-
-    Json(country)
+async fn get_country_by_id(
+    Path(country_id): Path<i64>,
+) -> Result<(StatusCode, Json<SelectCountry>), Response> {
+    match country_client::select_country(country_id).await {
+        Ok(country) => Ok((StatusCode::OK, Json(country))),
+        Err(_) => Err((
+            StatusCode::NOT_FOUND,
+            Json(json!({ "message": "Country not found" })),
+        )
+            .into_response()),
+    }
 }
 
 async fn list_countries() -> Json<Vec<SelectCountry>> {
