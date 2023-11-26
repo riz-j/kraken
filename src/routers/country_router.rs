@@ -1,13 +1,13 @@
 use axum::{
     extract::Path,
     http::StatusCode,
-    routing::{get, post},
+    routing::{get, post, put},
     Json, Router,
 };
 
 use crate::{
     clients::country_client,
-    models::country_model::{InsertCountry, SelectCountry},
+    models::country_model::{InsertCountry, SelectCountry, UpdateCountry},
 };
 
 async fn get_country_by_id(Path(country_id): Path<i64>) -> Json<SelectCountry> {
@@ -28,9 +28,21 @@ async fn create_country(Json(payload): Json<InsertCountry>) -> StatusCode {
     StatusCode::CREATED
 }
 
+async fn update_country(
+    Path(country_id): Path<i64>,
+    Json(payload): Json<UpdateCountry>,
+) -> StatusCode {
+    country_client::update_country(country_id, &payload)
+        .await
+        .unwrap();
+
+    StatusCode::NO_CONTENT
+}
+
 pub fn country_router() -> Router {
     Router::new()
         .route("/countries", get(list_countries))
         .route("/countries/:country_id", get(get_country_by_id))
         .route("/countries", post(create_country))
+        .route("/countries/:country_id", put(update_country))
 }

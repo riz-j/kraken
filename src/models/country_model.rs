@@ -14,6 +14,7 @@ pub struct InsertCountry {
     pub continent: String,
 }
 
+#[derive(Deserialize)]
 #[allow(dead_code)]
 pub struct UpdateCountry {
     pub name: Option<String>,
