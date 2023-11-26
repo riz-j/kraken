@@ -9,9 +9,19 @@
 </head>
 <body>
     <div id="app">
-        <div class="p-10">
-            <h1 class="text-2xl font-bold">List of Countries</h1>
-            <h1>{{ country }}</h1>
+        <div class="flex gap-56 p-10">
+            <div>
+                <h1 class="text-2xl font-bold">List of Countries</h1>
+                <h1 v-for="country in countries">
+                    {{ country.name }}
+                </h1>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">Create new country:</h1>
+                <input v-model="newCountry.name" name="name" placeholder="Name" class="border border-black"/>
+                <input v-model="newCountry.continent" name="name" placeholder="Continent" class="border border-black"/>
+                <button @click="handleSaveCountry">Save Country</button>
+            </div>
         </div>
     </div>
 </body>
@@ -21,7 +31,12 @@
             return {
                 greeting: "Hello Joe!",
 
-                country: ""
+                countries: [],
+
+                newCountry: {
+                    name: "",
+                    continent: ""
+                }
             }
         },
         mounted() {
@@ -29,9 +44,23 @@
         },
         methods: {
             populateCountries() {
-                fetch("/country/5")
-                    .then(res => res.text())
-                    .then(res => this.country = res);
+                fetch("/countries")
+                    .then(res => res.json())
+                    .then(data => this.countries = data);
+            },
+            handleSaveCountry() {
+                fetch("/countries", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: this.newCountry.name,
+                        continent: this.newCountry.continent
+                    })
+                })
+                .then(res => res.ok
+                    ? this.populateCountries() 
+                    : console.log("Error saving country")
+                );
             }
         }
     }).mount("#app")

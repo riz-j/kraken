@@ -42,7 +42,7 @@ async fn main() -> Result<(), sqlx::Error> {
     let app = Router::new()
         .route("/countries", get(list_countries))
         .route("/country/:country_id", get(get_country_by_id))
-        .route("/country", post(create_country))
+        .route("/countries", post(create_country))
         .route("/city/:city_id", get(get_city_by_id))
         .fallback_service(routes_static());
 
