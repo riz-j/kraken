@@ -60,6 +60,10 @@
                     .then(data => this.countries = data);
             },
             handleSaveCountry() {
+                if (this.newCountry.name.length < 1 || this.newCountry.continent.length < 1) {
+                    return;
+                }
+                    
                 fetch("/countries", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
