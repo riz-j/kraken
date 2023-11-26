@@ -25,10 +25,18 @@ async fn get_country_by_id(
     }
 }
 
-async fn list_countries() -> Json<Vec<SelectCountry>> {
-    let countries = country_client::list_countries().await.unwrap();
-
-    Json(countries)
+async fn list_countries() -> Result<(StatusCode, Json<Vec<SelectCountry>>), Response> {
+    match country_client::list_countries().await {
+        Ok(countries) => Ok((StatusCode::OK, Json(countries))),
+        Err(err) => {
+            println!("--> Error listing countries: {}", err);
+            Err((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(json!({ "message": "Error listing countries" })),
+            )
+                .into_response())
+        }
+    }
 }
 
 async fn create_country(Json(payload): Json<InsertCountry>) -> StatusCode {
