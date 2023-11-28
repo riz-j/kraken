@@ -10,19 +10,19 @@ use serde_json::json;
 use crate::{
     clients::country_client,
     models::country_model::{InsertCountry, SelectCountry, UpdateCountry},
+    schemas::country_schema::CountryExtendedSchema,
 };
 
-async fn get_country_by_id(
-    Path(country_id): Path<i64>,
-) -> Result<(StatusCode, Json<SelectCountry>), Response> {
-    match country_client::select_country(country_id).await {
-        Ok(country) => Ok((StatusCode::OK, Json(country))),
-        Err(_) => Err((
-            StatusCode::NOT_FOUND,
-            Json(json!({ "message": "Country not found" })),
-        )
-            .into_response()),
-    }
+async fn get_country_by_id(Path(country_id): Path<i64>) -> Json<CountryExtendedSchema> {
+    let country = country_client::select_country(country_id).await.unwrap();
+    let cities = country.get_cities().await;
+
+    Json(CountryExtendedSchema {
+        id: country.id,
+        name: country.name,
+        continent: country.continent,
+        cities: cities,
+    })
 }
 
 async fn list_countries() -> Result<(StatusCode, Json<Vec<SelectCountry>>), Response> {

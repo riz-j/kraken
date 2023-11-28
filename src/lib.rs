@@ -12,5 +12,6 @@ pub mod routers {
 }
 pub mod schemas {
     pub mod city_schema;
+    pub mod country_schema;
 }
 pub mod db;

@@ -1,3 +1,5 @@
+use super::city_model::SelectCity;
+use crate::clients::city_client;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug, sqlx::FromRow)]
@@ -19,4 +21,10 @@ pub struct InsertCountry {
 pub struct UpdateCountry {
     pub name: Option<String>,
     pub continent: Option<String>,
+}
+
+impl SelectCountry {
+    pub async fn get_cities(&self) -> Vec<SelectCity> {
+        city_client::list_cities_by_country(self.id).await.unwrap()
+    }
 }

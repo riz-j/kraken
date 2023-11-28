@@ -1,4 +1,4 @@
-use crate::db;
+use crate::db::{self, POOL};
 use crate::models::city_model::{InsertCity, SelectCity};
 use sqlx::Error;
 
@@ -41,6 +41,21 @@ pub async fn list_cities() -> Result<Vec<SelectCity>, Error> {
     ",
     )
     .fetch_all(db::POOL.get().unwrap())
+    .await?;
+
+    Ok(cities)
+}
+
+pub async fn list_cities_by_country(country_id: i64) -> Result<Vec<SelectCity>, Error> {
+    let cities = sqlx::query_as::<_, SelectCity>(
+        "
+        SELECT *
+        FROM cities
+        WHERE country_id = $1;
+    ",
+    )
+    .bind(country_id)
+    .fetch_all(POOL.get().unwrap())
     .await?;
 
     Ok(cities)
