@@ -1,22 +1,32 @@
 use axum::{extract::Path, routing::get, Json, Router};
-use serde::ser::SerializeTupleStruct;
 
 use crate::{
     clients::city_client,
-    models::{city_model::SelectCity, country_model::SelectCountry},
+    schemas::city_schema::{CityExtendedSchema, CitySummarizedSchema},
 };
 
-async fn get_city_by_id(Path(city_id): Path<i64>) -> Json<(SelectCity, SelectCountry)> {
+async fn get_city_by_id(Path(city_id): Path<i64>) -> Json<CityExtendedSchema> {
     let city = city_client::select_city(city_id).await.unwrap();
     let country = city.get_country().await.unwrap();
 
-    Json((city, country))
+    Json(CityExtendedSchema {
+        id: city.id,
+        name: city.name,
+        country: country,
+    })
 }
 
-async fn list_cities() -> Json<Vec<SelectCity>> {
+async fn list_cities() -> Json<Vec<CitySummarizedSchema>> {
     let cities = city_client::list_cities().await.unwrap();
+    let cities_summarized = cities
+        .iter()
+        .map(|city| CitySummarizedSchema {
+            id: city.id,
+            name: city.name.clone(),
+        })
+        .collect();
 
-    Json(cities)
+    Json(cities_summarized)
 }
 
 pub fn city_router() -> Router {

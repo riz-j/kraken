@@ -10,4 +10,7 @@ pub mod routers {
     pub mod city_router;
     pub mod country_router;
 }
+pub mod schemas {
+    pub mod city_schema;
+}
 pub mod db;
