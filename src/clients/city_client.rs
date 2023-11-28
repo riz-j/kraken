@@ -32,3 +32,16 @@ pub async fn select_city(city_id: i64) -> Result<SelectCity, Error> {
 
     Ok(city)
 }
+
+pub async fn list_cities() -> Result<Vec<SelectCity>, Error> {
+    let cities = sqlx::query_as::<_, SelectCity>(
+        "
+        SELECT * 
+        FROM cities;
+    ",
+    )
+    .fetch_all(db::POOL.get().unwrap())
+    .await?;
+
+    Ok(cities)
+}
