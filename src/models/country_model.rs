@@ -7,6 +7,7 @@ pub struct SelectCountry {
     pub id: i64,
     pub name: String,
     pub continent: Option<String>,
+    pub is_archived: bool,
 }
 
 #[derive(Deserialize)]
@@ -21,6 +22,7 @@ pub struct InsertCountry {
 pub struct UpdateCountry {
     pub name: Option<String>,
     pub continent: Option<String>,
+    pub is_archived: Option<bool>,
 }
 
 impl SelectCountry {
@@ -36,6 +38,7 @@ impl SelectCountry {
             name: self.name.clone(),
             continent: self.continent.clone(),
             cities: cities,
+            is_archived: self.is_archived,
         }
     }
 }

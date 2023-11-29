@@ -8,4 +8,5 @@ pub struct CountryExtendedSchema {
     pub name: String,
     pub continent: Option<String>,
     pub cities: Vec<SelectCity>,
+    pub is_archived: bool,
 }
