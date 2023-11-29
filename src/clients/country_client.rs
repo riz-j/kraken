@@ -22,7 +22,7 @@ pub async fn insert_country(country: &InsertCountry) -> Result<(), Error> {
 pub async fn list_countries() -> Result<Vec<SelectCountry>, Error> {
     let countries = sqlx::query_as::<_, SelectCountry>(
         "
-        SELECT id, name, continent
+        SELECT *
         FROM countries;
         ",
     )
@@ -35,7 +35,7 @@ pub async fn list_countries() -> Result<Vec<SelectCountry>, Error> {
 pub async fn select_country(country_id: i64) -> Result<SelectCountry, Error> {
     let country = sqlx::query_as::<_, SelectCountry>(
         "
-        SELECT id, name, continent 
+        SELECT *
         FROM countries WHERE id = $1
         ",
     )
