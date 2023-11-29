@@ -2,7 +2,7 @@ use axum::{
     extract::Path,
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::{delete, get, post, put},
+    routing::get,
     Json, Router,
 };
 use serde_json::json;
