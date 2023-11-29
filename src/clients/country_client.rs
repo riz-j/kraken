@@ -52,12 +52,14 @@ pub async fn update_country(country_id: i64, update_country: &UpdateCountry) -> 
         UPDATE countries
         SET 
             name = COALESCE($1, name),
-            continent = COALESCE($2, continent)
-        WHERE id = $3;
+            continent = COALESCE($2, continent),
+            is_archived = COALESCE($3, is_archived)
+        WHERE id = $4;
         ",
     )
     .bind(&update_country.name)
     .bind(&update_country.continent)
+    .bind(&update_country.is_archived)
     .bind(country_id)
     .execute(db::POOL.get().unwrap())
     .await?;
