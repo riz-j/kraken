@@ -1,7 +1,7 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
 
-CREATE TABLE countries (
+CREATE TABLE IF NOT EXISTS "countries" (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     continent TEXT
@@ -23,10 +23,11 @@ INSERT INTO countries VALUES (14, 'Mexico', 'North America');
 INSERT INTO countries VALUES (15, 'India', 'Asia');
 INSERT INTO countries VALUES (16, 'New Zealand', 'Oceania');
 
-CREATE TABLE cities (
+CREATE TABLE IF NOT EXISTS "cities" (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    country_id INTEGER
+    country_id INTEGER,
+    FOREIGN KEY (country_id) REFERENCES countries(id)
 );
 INSERT INTO cities (name, country_id) VALUES ('Warsaw', 1);
 INSERT INTO cities (name, country_id) VALUES ('Krakow', 1);
