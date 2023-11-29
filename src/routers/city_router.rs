@@ -7,23 +7,15 @@ use crate::{
 
 async fn get_city_by_id(Path(city_id): Path<i64>) -> Json<CityExtendedSchema> {
     let city = city_client::select_city(city_id).await.unwrap();
-    let country = city.get_country().await.unwrap();
 
-    Json(CityExtendedSchema {
-        id: city.id,
-        name: city.name,
-        country: country,
-    })
+    Json(city.into_extended_schema().await)
 }
 
 async fn list_cities() -> Json<Vec<CitySummarizedSchema>> {
     let cities = city_client::list_cities().await.unwrap();
     let cities_summarized = cities
         .iter()
-        .map(|city| CitySummarizedSchema {
-            id: city.id,
-            name: city.name.clone(),
-        })
+        .map(|city| city.into_summarized_schema())
         .collect();
 
     Json(cities_summarized)
