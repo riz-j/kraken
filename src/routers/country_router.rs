@@ -15,14 +15,8 @@ use crate::{
 
 async fn get_country_by_id(Path(country_id): Path<i64>) -> Json<CountryExtendedSchema> {
     let country = country_client::select_country(country_id).await.unwrap();
-    let cities = country.get_cities().await;
 
-    Json(CountryExtendedSchema {
-        id: country.id,
-        name: country.name,
-        continent: country.continent,
-        cities: cities,
-    })
+    Json(country.into_extended_schema().await)
 }
 
 async fn list_countries() -> Result<(StatusCode, Json<Vec<SelectCountry>>), Response> {
