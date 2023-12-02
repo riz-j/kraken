@@ -13,7 +13,7 @@ pub async fn require_auth<B>(req: Request<B>, next: Next<B>) -> Response<BoxBody
     let headers = req.headers();
     let cookies = cookie_extractor(headers);
 
-    if cookies.get("KRAKEN_AUTH") != Some(&"my_secret_token".to_string()) {
+    if cookies.get("KRAKEN_AUTH").is_none() {
         return (StatusCode::UNAUTHORIZED, "Unauthorized Access").into_response();
     }
 

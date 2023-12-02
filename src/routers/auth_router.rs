@@ -16,24 +16,18 @@ struct Claims {
     exp: usize,
 }
 
-async fn jwt() -> impl IntoResponse {
-    let secret = dotenv!("JWT_SECRET");
-    let key = EncodingKey::from_secret(secret.as_ref());
-
+async fn login() -> impl IntoResponse {
+    let encoding_key = EncodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
     let timestamp_now = chrono::Utc::now().timestamp() as usize;
-    let my_claims = Claims {
+    let claims = Claims {
         user_id: 123123,
         iat: timestamp_now,
-        exp: timestamp_now + (7 * 24 * 60 * 60),
+        exp: timestamp_now + (30),
     };
 
-    let token = encode(&Header::default(), &my_claims, &key);
+    let token = encode(&Header::default(), &claims, &encoding_key).unwrap();
 
-    token.unwrap()
-}
-
-async fn login() -> impl IntoResponse {
-    let mut cookie = Cookie::new("KRAKEN_AUTH", "my_secret_token");
+    let mut cookie = Cookie::new("KRAKEN_AUTH", token);
     cookie.set_secure(true);
     cookie.set_domain("localhost");
     cookie.set_path("/");
@@ -49,5 +43,5 @@ async fn login() -> impl IntoResponse {
 }
 
 pub fn auth_router() -> Router {
-    Router::new().route("/auth/login", post(login).get(jwt))
+    Router::new().route("/auth/login", post(login))
 }
