@@ -4,6 +4,7 @@ use kraken::middlewares::auth::require_auth;
 use kraken::routers::auth_router::auth_router;
 use kraken::routers::city_router::city_router;
 use kraken::routers::country_router::country_router;
+use std::error::Error;
 use tower_http::cors::CorsLayer;
 use tower_http::services::ServeDir;
 
@@ -12,7 +13,8 @@ fn routes_static() -> Router {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), sqlx::Error> {
+async fn main() -> Result<(), Box<dyn Error>> {
+    dotenvy::dotenv()?;
     kraken::db::init_pool().await;
 
     let app = Router::new()

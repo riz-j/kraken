@@ -5,6 +5,7 @@ use axum::{
     Router,
 };
 use cookie::Cookie;
+use dotenvy_macro::dotenv;
 use jsonwebtoken::{encode, EncodingKey, Header};
 use serde::{Deserialize, Serialize};
 
@@ -16,7 +17,8 @@ struct Claims {
 }
 
 async fn jwt() -> impl IntoResponse {
-    let key = EncodingKey::from_secret("my_very_secretive_secret".as_ref());
+    let secret = dotenv!("JWT_SECRET");
+    let key = EncodingKey::from_secret(secret.as_ref());
 
     let timestamp_now = chrono::Utc::now().timestamp() as usize;
     let my_claims = Claims {

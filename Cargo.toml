@@ -17,3 +17,5 @@ tower-cookies = { version = "0.10.0" }
 cookie = "0.16"
 jsonwebtoken = "9"
 chrono = "0.4.31"
+dotenvy = "0.15.7"
+dotenvy_macro = "0.15.7"
