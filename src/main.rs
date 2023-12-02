@@ -1,6 +1,6 @@
 use axum::routing::get_service;
 use axum::Router;
-use kraken::middlewares::require_auth::require_auth;
+use kraken::middlewares::auth::require_auth;
 use kraken::routers::city_router::city_router;
 use kraken::routers::country_router::country_router;
 use tower_http::cors::CorsLayer;
