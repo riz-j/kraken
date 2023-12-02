@@ -1,4 +1,5 @@
 pub mod models {
+    pub mod auth_model;
     pub mod city_model;
     pub mod country_model;
 }

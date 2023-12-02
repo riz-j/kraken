@@ -7,14 +7,8 @@ use axum::{
 use cookie::Cookie;
 use dotenvy_macro::dotenv;
 use jsonwebtoken::{encode, EncodingKey, Header};
-use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
-struct Claims {
-    user_id: i64,
-    iat: usize,
-    exp: usize,
-}
+use crate::models::auth_model::Claims;
 
 async fn login() -> impl IntoResponse {
     let encoding_key = EncodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
