@@ -14,4 +14,7 @@ pub mod schemas {
     pub mod city_schema;
     pub mod country_schema;
 }
+pub mod middlewares {
+    pub mod require_auth;
+}
 pub mod db;

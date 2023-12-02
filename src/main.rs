@@ -1,5 +1,6 @@
 use axum::routing::get_service;
 use axum::Router;
+use kraken::middlewares::require_auth::require_auth;
 use kraken::routers::city_router::city_router;
 use kraken::routers::country_router::country_router;
 use tower_http::cors::CorsLayer;
@@ -17,6 +18,7 @@ async fn main() -> Result<(), sqlx::Error> {
         .merge(country_router())
         .merge(city_router())
         .layer(CorsLayer::permissive())
+        .layer(axum::middleware::from_fn(require_auth))
         .fallback_service(routes_static());
 
     axum::Server::bind(&"0.0.0.0:2900".parse().unwrap())
