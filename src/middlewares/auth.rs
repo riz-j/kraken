@@ -1,30 +1,43 @@
+use std::collections::HashMap;
+
 use axum::{
     body::BoxBody,
-    http::{header, Request, Response},
+    http::{header, HeaderMap, Request, Response},
     middleware::Next,
 };
 use tower_cookies::Cookie;
 
 pub async fn require_auth<B>(req: Request<B>, next: Next<B>) -> Response<BoxBody> {
-    // Access the request headers
     let headers = req.headers();
+    let cookies = cookie_extractor(headers);
 
-    // Try to extract and parse the Cookie header
-    if let Some(cookie_header) = headers.get(header::COOKIE) {
-        if let Ok(cookie_str) = cookie_header.to_str() {
-            // Parse the Cookie header to get individual cookies
-            let cookies = cookie_str
-                .split(';')
-                .filter_map(|s| Cookie::parse_encoded(s).ok());
-
-            // Now you can work with the cookies
-            for cookie in cookies {
-                println!("Cookie: {} = {}", cookie.name(), cookie.value());
-            }
-        }
+    for (name, value) in cookies {
+        println!("--->");
+        println!("  Cookie: {} = {}", name, value);
     }
 
-    // Proceed with the next middleware or handler
-    println!("Logged yo!");
     next.run(req).await
+}
+
+fn cookie_extractor(headers: &HeaderMap) -> HashMap<String, String> {
+    let mut cookies_map = HashMap::new();
+
+    let header_value = match headers.get(header::COOKIE) {
+        Some(value) => value,
+        None => return cookies_map,
+    };
+
+    let cookie_str = match header_value.to_str() {
+        Ok(str) => str,
+        Err(_) => return cookies_map,
+    };
+
+    cookie_str
+        .split(';')
+        .filter_map(|s| Cookie::parse_encoded(s).ok())
+        .for_each(|cookie| {
+            cookies_map.insert(cookie.name().to_string(), cookie.value().to_string());
+        });
+
+    cookies_map
 }
