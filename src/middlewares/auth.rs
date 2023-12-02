@@ -22,12 +22,12 @@ pub async fn require_auth<B>(req: Request<B>, next: Next<B>) -> Response<BoxBody
 fn cookie_extractor(headers: &HeaderMap) -> HashMap<String, String> {
     let mut cookies_map = HashMap::new();
 
-    let header_value = match headers.get(header::COOKIE) {
+    let cookies_in_header = match headers.get(header::COOKIE) {
         Some(value) => value,
         None => return cookies_map,
     };
 
-    let cookie_str = match header_value.to_str() {
+    let cookie_str = match cookies_in_header.to_str() {
         Ok(str) => str,
         Err(_) => return cookies_map,
     };
