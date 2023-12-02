@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use axum::{
     body::BoxBody,
+    extract::Path,
     http::{header, HeaderMap, Request, Response, StatusCode},
     middleware::Next,
     response::IntoResponse,
@@ -12,11 +13,24 @@ pub async fn require_auth<B>(req: Request<B>, next: Next<B>) -> Response<BoxBody
     let headers = req.headers();
     let cookies = cookie_extractor(headers);
 
-    println!("{:?}", cookies);
-
     if cookies.get("KRAKEN_AUTH") != Some(&"my_secret_token".to_string()) {
         return (StatusCode::UNAUTHORIZED, "Unauthorized Access").into_response();
     }
+
+    next.run(req).await
+}
+
+pub async fn print_project<B>(
+    Path(params): Path<HashMap<String, String>>,
+    req: Request<B>,
+    next: Next<B>,
+) -> Response<BoxBody> {
+    let country_id = match params.get("country_id") {
+        Some(value) => value,
+        None => "nothing",
+    };
+
+    println!("Country ID: {}", country_id);
 
     next.run(req).await
 }
