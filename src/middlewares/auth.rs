@@ -14,10 +14,11 @@ pub async fn require_auth<B>(req: Request<B>, next: Next<B>) -> Response<BoxBody
 
     println!("{:?}", cookies);
 
-    match cookies.get("KRAKEN_AUTH") {
-        Some(_) => next.run(req).await,
-        None => (StatusCode::UNAUTHORIZED, "Unauthorized Access!").into_response(),
+    if cookies.get("KRAKEN_AUTH") != Some(&"my_secret_token".to_string()) {
+        return (StatusCode::UNAUTHORIZED, "Unauthorized Access").into_response();
     }
+
+    next.run(req).await
 }
 
 fn cookie_extractor(headers: &HeaderMap) -> HashMap<String, String> {
