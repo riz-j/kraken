@@ -2,8 +2,9 @@ use std::collections::HashMap;
 
 use axum::{
     body::BoxBody,
-    http::{header, HeaderMap, Request, Response},
+    http::{header, HeaderMap, Request, Response, StatusCode},
     middleware::Next,
+    response::IntoResponse,
 };
 use tower_cookies::Cookie;
 
@@ -11,12 +12,10 @@ pub async fn require_auth<B>(req: Request<B>, next: Next<B>) -> Response<BoxBody
     let headers = req.headers();
     let cookies = cookie_extractor(headers);
 
-    for (name, value) in cookies {
-        println!("--->");
-        println!("  Cookie: {} = {}", name, value);
+    match cookies.get("CFGLOBALS") {
+        Some(_) => next.run(req).await,
+        None => (StatusCode::UNAUTHORIZED, "Unauthorized Access!").into_response(),
     }
-
-    next.run(req).await
 }
 
 fn cookie_extractor(headers: &HeaderMap) -> HashMap<String, String> {
