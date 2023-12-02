@@ -1,6 +1,6 @@
 use axum::routing::get_service;
 use axum::Router;
-use kraken::middlewares::auth::{print_country_id, require_auth};
+use kraken::middlewares::auth_middleware::{print_country_id, require_auth};
 use kraken::routers::auth_router::auth_router;
 use kraken::routers::city_router::city_router;
 use kraken::routers::country_router::country_router;

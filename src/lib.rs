@@ -17,6 +17,6 @@ pub mod schemas {
     pub mod country_schema;
 }
 pub mod middlewares {
-    pub mod auth;
+    pub mod auth_middleware;
 }
 pub mod db;
