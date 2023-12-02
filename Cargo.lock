@@ -219,6 +219,16 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "cookie"
+version = "0.16.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e859cd57d0710d9e06c381b550c06e76992472a8c6d527aecd2fc673dcc231fb"
+dependencies = [
+ "time",
+ "version_check",
+]
+
+[[package]]
+name = "cookie"
 version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3cd91cf61412820176e137621345ee43b3f4423e589e7ae4e50d601d93e35ef8"
@@ -693,6 +703,7 @@ name = "kraken"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "cookie 0.16.2",
  "serde",
  "serde_json",
  "sqlx",
@@ -1532,7 +1543,7 @@ checksum = "4fd0118512cf0b3768f7fcccf0bef1ae41d68f2b45edc1e77432b36c97c56c6d"
 dependencies = [
  "async-trait",
  "axum-core 0.4.0",
- "cookie",
+ "cookie 0.18.0",
  "futures-util",
  "http 1.0.0",
  "parking_lot 0.12.1",

@@ -7,6 +7,7 @@ pub mod clients {
     pub mod country_client;
 }
 pub mod routers {
+    pub mod auth_router;
     pub mod city_router;
     pub mod country_router;
 }
