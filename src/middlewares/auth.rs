@@ -20,7 +20,7 @@ pub async fn require_auth<B>(req: Request<B>, next: Next<B>) -> Response<BoxBody
     next.run(req).await
 }
 
-pub async fn print_project<B>(
+pub async fn print_country_id<B>(
     Path(params): Path<HashMap<String, String>>,
     req: Request<B>,
     next: Next<B>,

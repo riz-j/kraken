@@ -1,6 +1,6 @@
 use axum::routing::get_service;
 use axum::Router;
-use kraken::middlewares::auth::{print_project, require_auth};
+use kraken::middlewares::auth::{print_country_id, require_auth};
 use kraken::routers::auth_router::auth_router;
 use kraken::routers::city_router::city_router;
 use kraken::routers::country_router::country_router;
@@ -22,7 +22,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .merge(city_router())
         .layer(CorsLayer::permissive())
         .layer(axum::middleware::from_fn(require_auth))
-        .layer(axum::middleware::from_fn(print_project))
+        .layer(axum::middleware::from_fn(print_country_id))
         .merge(auth_router())
         .fallback_service(routes_static());
 
