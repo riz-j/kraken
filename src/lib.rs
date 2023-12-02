@@ -2,9 +2,9 @@ pub mod models {
     pub mod city_model;
     pub mod country_model;
 }
-pub mod clients {
-    pub mod city_client;
-    pub mod country_client;
+pub mod stores {
+    pub mod city_store;
+    pub mod country_store;
 }
 pub mod routers {
     pub mod auth_router;

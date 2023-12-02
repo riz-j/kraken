@@ -8,19 +8,19 @@ use axum::{
 use serde_json::json;
 
 use crate::{
-    clients::country_client,
     models::country_model::{InsertCountry, SelectCountry, UpdateCountry},
     schemas::country_schema::CountryExtendedSchema,
+    stores::country_store,
 };
 
 async fn get_country_by_id(Path(country_id): Path<i64>) -> Json<CountryExtendedSchema> {
-    let country = country_client::select_country(country_id).await.unwrap();
+    let country = country_store::select_country(country_id).await.unwrap();
 
     Json(country.into_extended_schema().await)
 }
 
 async fn list_countries() -> Result<(StatusCode, Json<Vec<SelectCountry>>), Response> {
-    match country_client::list_countries().await {
+    match country_store::list_countries().await {
         Ok(countries) => Ok((StatusCode::OK, Json(countries))),
         Err(err) => {
             println!("--> Error listing countries: {}", err);
@@ -34,7 +34,7 @@ async fn list_countries() -> Result<(StatusCode, Json<Vec<SelectCountry>>), Resp
 }
 
 async fn create_country(Json(payload): Json<InsertCountry>) -> Result<StatusCode, Response> {
-    match country_client::insert_country(&payload).await {
+    match country_store::insert_country(&payload).await {
         Ok(_) => Ok(StatusCode::OK),
         Err(err) => {
             println!("--> Error creating country: {}", err);
@@ -51,7 +51,7 @@ async fn update_country(
     Path(country_id): Path<i64>,
     Json(payload): Json<UpdateCountry>,
 ) -> StatusCode {
-    country_client::update_country(country_id, &payload)
+    country_store::update_country(country_id, &payload)
         .await
         .unwrap();
 
@@ -59,7 +59,7 @@ async fn update_country(
 }
 
 async fn delete_country(Path(country_id): Path<i64>) -> Response {
-    match country_client::delete_country(country_id).await {
+    match country_store::delete_country(country_id).await {
         Ok(_) => (StatusCode::NO_CONTENT).into_response(),
         Err(err) => {
             println!("--> Error deleting country: {}", err);

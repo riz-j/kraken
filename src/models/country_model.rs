@@ -1,5 +1,5 @@
 use super::city_model::SelectCity;
-use crate::{clients::city_client, schemas::country_schema::CountryExtendedSchema};
+use crate::{schemas::country_schema::CountryExtendedSchema, stores::city_store};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Debug, sqlx::FromRow)]
@@ -27,7 +27,7 @@ pub struct UpdateCountry {
 
 impl SelectCountry {
     pub async fn get_cities(&self) -> Vec<SelectCity> {
-        city_client::list_cities_by_country(self.id).await.unwrap()
+        city_store::list_cities_by_country(self.id).await.unwrap()
     }
 
     pub async fn into_extended_schema(&self) -> CountryExtendedSchema {
