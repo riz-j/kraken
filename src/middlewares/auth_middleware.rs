@@ -1,5 +1,4 @@
-use std::collections::HashMap;
-
+use crate::models::auth_model::Claims;
 use axum::{
     body::BoxBody,
     extract::Path,
@@ -7,15 +6,34 @@ use axum::{
     middleware::Next,
     response::IntoResponse,
 };
+use dotenvy_macro::dotenv;
+use jsonwebtoken::{decode, DecodingKey, Validation};
+use std::collections::HashMap;
 use tower_cookies::Cookie;
 
 pub async fn require_auth<B>(req: Request<B>, next: Next<B>) -> Response<BoxBody> {
     let headers = req.headers();
     let cookies = cookie_extractor(headers);
 
-    if cookies.get("KRAKEN_AUTH").is_none() {
-        return (StatusCode::UNAUTHORIZED, "Unauthorized Access").into_response();
+    let decoding_key = DecodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
+    let token_str = match cookies.get("KRAKEN_AUTH") {
+        Some(value) => value,
+        None => return (StatusCode::UNAUTHORIZED, "Token doesn't exist").into_response(),
+    };
+
+    let token = match decode::<Claims>(&token_str, &decoding_key, &Validation::default()) {
+        Ok(value) => value,
+        Err(_) => return (StatusCode::UNAUTHORIZED, "Token is invalid").into_response(),
+    };
+
+    let claims = token.claims;
+
+    let timestamp_now = chrono::Utc::now().timestamp() as usize;
+    if claims.exp < timestamp_now {
+        return (StatusCode::UNAUTHORIZED, "Token is expired").into_response();
     }
+
+    println!("User with token claim has entered: {:?}", claims);
 
     next.run(req).await
 }
