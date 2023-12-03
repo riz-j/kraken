@@ -2,6 +2,7 @@ pub mod models {
     pub mod auth_model;
     pub mod city_model;
     pub mod country_model;
+    pub mod user_model;
 }
 pub mod stores {
     pub mod city_store;
@@ -18,5 +19,8 @@ pub mod schemas {
 }
 pub mod middlewares {
     pub mod auth_middleware;
+}
+pub mod services {
+    pub mod auth_service;
 }
 pub mod db;

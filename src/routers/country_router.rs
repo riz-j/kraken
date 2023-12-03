@@ -1,19 +1,29 @@
+use crate::{
+    models::{
+        country_model::{InsertCountry, SelectCountry, UpdateCountry},
+        user_model::UserId,
+    },
+    schemas::country_schema::CountryExtendedSchema,
+    stores::country_store,
+};
 use axum::{
+    body::Body,
     extract::Path,
-    http::StatusCode,
+    http::{Request, StatusCode},
     response::{IntoResponse, Response},
     routing::get,
     Json, Router,
 };
 use serde_json::json;
 
-use crate::{
-    models::country_model::{InsertCountry, SelectCountry, UpdateCountry},
-    schemas::country_schema::CountryExtendedSchema,
-    stores::country_store,
-};
+async fn get_country_by_id(
+    Path(country_id): Path<i64>,
+    req: Request<Body>,
+) -> Json<CountryExtendedSchema> {
+    let user_id = req.extensions().get::<UserId>().unwrap();
 
-async fn get_country_by_id(Path(country_id): Path<i64>) -> Json<CountryExtendedSchema> {
+    println!("User ID is: {}", user_id.id);
+
     let country = country_store::select_country(country_id).await.unwrap();
 
     Json(country.into_extended_schema().await)
