@@ -8,7 +8,7 @@ use std::error::Error;
 use tower_http::cors::CorsLayer;
 use tower_http::services::ServeDir;
 
-fn routes_static() -> Router {
+fn static_router() -> Router {
     Router::new().nest_service("/", get_service(ServeDir::new("./public")))
 }
 
@@ -24,7 +24,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .layer(axum::middleware::from_fn(require_auth))
         .layer(axum::middleware::from_fn(print_country_id))
         .merge(auth_router())
-        .fallback_service(routes_static());
+        .fallback_service(static_router());
 
     axum::Server::bind(&"0.0.0.0:2900".parse().unwrap())
         .serve(app.into_make_service())
