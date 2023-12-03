@@ -23,17 +23,10 @@ pub async fn require_auth<B>(mut req: Request<B>, next: Next<B>) -> Response<Box
         None => return (StatusCode::UNAUTHORIZED, "Token doesn't exist").into_response(),
     };
 
-    let token = match decode::<Claims>(&token_str, &decoding_key, &Validation::default()) {
-        Ok(value) => value,
+    let claims = match decode::<Claims>(&token_str, &decoding_key, &Validation::default()) {
+        Ok(value) => value.claims,
         Err(_) => return (StatusCode::UNAUTHORIZED, "Token is invalid").into_response(),
     };
-
-    let claims = token.claims;
-
-    let timestamp_now = chrono::Utc::now().timestamp() as usize;
-    if claims.exp < timestamp_now {
-        return (StatusCode::UNAUTHORIZED, "Token is expired").into_response();
-    }
 
     req.extensions_mut().insert(UserId { id: claims.user_id });
 
