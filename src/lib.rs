@@ -5,6 +5,7 @@ pub mod models {
     pub mod user_model;
 }
 pub mod stores {
+    pub mod auth_store;
     pub mod city_store;
     pub mod country_store;
     pub mod user_store;

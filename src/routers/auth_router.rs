@@ -1,3 +1,10 @@
+use crate::{
+    models::{
+        auth_model::{Claims, LoginRequest},
+        user_model::InsertUser,
+    },
+    stores::{auth_store, user_store},
+};
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
@@ -9,16 +16,21 @@ use dotenvy_macro::dotenv;
 use jsonwebtoken::{encode, EncodingKey, Header};
 use serde_json::json;
 
-use crate::{
-    models::{auth_model::Claims, user_model::InsertUser},
-    stores::user_store,
-};
+async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
+    let user = match auth_store::login(&payload).await {
+        Ok(value) => value,
+        Err(error) => {
+            return Response::builder()
+                .status(StatusCode::NOT_FOUND)
+                .body(format!("Email and/or password is incorrect: {:?}", error))
+                .unwrap();
+        }
+    };
 
-async fn login() -> impl IntoResponse {
     let encoding_key = EncodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
     let timestamp_now = chrono::Utc::now().timestamp() as usize;
     let claims = Claims {
-        user_id: 123123,
+        user_id: user.id,
         iat: timestamp_now,
         exp: timestamp_now + (2 * 60),
     };

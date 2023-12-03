@@ -6,3 +6,9 @@ pub struct Claims {
     pub iat: usize,
     pub exp: usize,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoginRequest {
+    pub email: String,
+    pub password: String,
+}
