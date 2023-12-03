@@ -1,9 +1,7 @@
 use crate::{
-    models::{
-        country_model::{InsertCountry, SelectCountry, UpdateCountry},
-        user_model::UserId,
-    },
+    models::country_model::{InsertCountry, SelectCountry, UpdateCountry},
     schemas::country_schema::CountryExtendedSchema,
+    services::auth_service,
     stores::country_store,
 };
 use axum::{
@@ -20,9 +18,9 @@ async fn get_country_by_id(
     Path(country_id): Path<i64>,
     req: Request<Body>,
 ) -> Json<CountryExtendedSchema> {
-    let user_id = req.extensions().get::<UserId>().unwrap();
+    let user_id = auth_service::get_user_id(&req).unwrap_or(0);
 
-    println!("User ID is: {}", user_id.id);
+    println!("User ID is: {}", user_id);
 
     let country = country_store::select_country(country_id).await.unwrap();
 
