@@ -2,13 +2,17 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
     routing::post,
-    Router,
+    Json, Router,
 };
 use cookie::Cookie;
 use dotenvy_macro::dotenv;
 use jsonwebtoken::{encode, EncodingKey, Header};
+use serde_json::json;
 
-use crate::models::auth_model::Claims;
+use crate::{
+    models::{auth_model::Claims, user_model::InsertUser},
+    stores::user_store,
+};
 
 async fn login() -> impl IntoResponse {
     let encoding_key = EncodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
@@ -36,6 +40,14 @@ async fn login() -> impl IntoResponse {
     response
 }
 
+async fn signup(Json(payload): Json<InsertUser>) -> impl IntoResponse {
+    let user_id = user_store::insert_user(&payload).await.unwrap();
+
+    (StatusCode::CREATED, Json(json!({ "user_id": user_id.id })))
+}
+
 pub fn auth_router() -> Router {
-    Router::new().route("/auth/login", post(login))
+    Router::new()
+        .route("/auth/login", post(login))
+        .route("/auth/signup", post(signup))
 }

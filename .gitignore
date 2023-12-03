@@ -1,3 +1,4 @@
 /target
 my_database.db
 .env
+/migrations
