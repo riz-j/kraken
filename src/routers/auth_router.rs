@@ -16,7 +16,7 @@ async fn login() -> impl IntoResponse {
     let claims = Claims {
         user_id: 123123,
         iat: timestamp_now,
-        exp: timestamp_now + (30),
+        exp: timestamp_now + (2 * 60),
     };
 
     let token = encode(&Header::default(), &claims, &encoding_key).unwrap();
