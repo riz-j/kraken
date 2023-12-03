@@ -14,7 +14,6 @@ use axum::{
 use cookie::Cookie;
 use dotenvy_macro::dotenv;
 use jsonwebtoken::{encode, EncodingKey, Header};
-use serde_json::json;
 
 async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
     let user = match auth_store::login(&payload).await {
@@ -46,7 +45,7 @@ async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
     let response = Response::builder()
         .status(StatusCode::OK)
         .header("Set-Cookie", cookie.to_string())
-        .body("Cookies set!".to_string())
+        .body(format!("Cookies set! Welcome back, {}!", user.first_name))
         .unwrap();
 
     response

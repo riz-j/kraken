@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::stores::user_store;
+
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct UserId {
     pub id: i64,

@@ -1,6 +1,6 @@
 use crate::{
     db,
-    models::user_model::{InsertUser, UserId},
+    models::user_model::{InsertUser, SelectUser, UserId},
 };
 
 pub async fn insert_user(user: &InsertUser) -> Result<UserId, sqlx::Error> {
@@ -33,4 +33,20 @@ pub async fn insert_user(user: &InsertUser) -> Result<UserId, sqlx::Error> {
     println!("User with ID of: {}, has been inserted", user_id.id);
 
     Ok(user_id)
+}
+
+pub async fn get_user(user_id: &i64) -> Result<SelectUser, sqlx::Error> {
+    let user = sqlx::query_as::<_, SelectUser>(
+        "
+        SELECT * 
+        FROM users
+        WHERE 
+            users.id = $1;
+    ",
+    )
+    .bind(user_id)
+    .fetch_one(db::POOL.get().unwrap())
+    .await?;
+
+    Ok(user)
 }
