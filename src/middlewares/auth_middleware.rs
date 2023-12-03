@@ -37,8 +37,6 @@ pub async fn require_auth<B>(mut req: Request<B>, next: Next<B>) -> Response<Box
 
     req.extensions_mut().insert(UserId { id: claims.user_id });
 
-    println!("User with token claim has entered: {:?}", claims);
-
     next.run(req).await
 }
 
