@@ -17,12 +17,12 @@ pub async fn require_auth<B>(mut req: Request<B>, next: Next<B>) -> Response<Box
     let headers = req.headers();
     let cookies = cookie_extractor(headers);
 
-    let decoding_key = DecodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
     let token_str = match cookies.get("KRAKEN_AUTH") {
         Some(value) => value,
         None => return (StatusCode::UNAUTHORIZED, "Token doesn't exist").into_response(),
     };
 
+    let decoding_key = DecodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
     let claims = match decode::<Claims>(&token_str, &decoding_key, &Validation::default()) {
         Ok(value) => value.claims,
         Err(_) => return (StatusCode::UNAUTHORIZED, "Token is invalid").into_response(),
