@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="/cdn/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.7/dist/full.min.css" rel="stylesheet" type="text/css" />
 </head>
@@ -14,41 +14,11 @@
             <input v-model="email" class="input input-bordered" />
             <input v-model="password" class="input input-bordered" />
             <button @click="handleLogin()" class="btn">Log In</button>
-            <p>Don't have an account? 
+            <p>Don't have an account?
                 <a href="/_/signup" class="link">Sign up here</a>.
             </p>
         </div>
     </div>
-    <script>
-        const { createApp, ref } = Vue;
-
-        createApp({
-            setup() {
-                const email = ref("");
-                const password = ref("");
-
-                const handleLogin = () => {
-                    fetch("/auth/login", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            email: email.value,
-                            password: password.value
-                        })
-                    }).then(res => {
-                        if (res.ok) { 
-                            window.location.href = "/countries"; 
-                        }
-                    });
-                };
-
-                return { 
-                    email,
-                    password,
-                    handleLogin
-                }
-            }
-        }).mount("#app")
-    </script>
+    <script src="index.js"></script>
 </body>
 </html>
