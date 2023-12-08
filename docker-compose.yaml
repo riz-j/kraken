@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  docker-kraken:
+    build: .
+    ports:
+      - "2900:2900"
+    restart: unless-stopped
+    container_name: docker-kraken
