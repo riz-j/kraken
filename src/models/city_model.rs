@@ -4,10 +4,11 @@ use crate::{
 };
 use serde::Serialize;
 use sqlx::Error;
+use ts_rs::TS;
 
 use super::country_model::SelectCountry;
 
-#[derive(Debug, Serialize, sqlx::FromRow)]
+#[derive(Debug, Serialize, sqlx::FromRow, TS)]
 #[allow(dead_code)]
 pub struct SelectCity {
     pub id: i64,

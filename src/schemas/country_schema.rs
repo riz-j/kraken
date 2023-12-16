@@ -1,8 +1,10 @@
 use serde::Serialize;
+use ts_rs::TS;
 
 use crate::models::city_model::SelectCity;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TS)]
+#[ts(export)]
 pub struct CountryExtendedSchema {
     pub id: i64,
     pub name: String,

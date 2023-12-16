@@ -1,8 +1,9 @@
 use super::city_model::SelectCity;
 use crate::{schemas::country_schema::CountryExtendedSchema, stores::city_store};
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
-#[derive(Serialize, Debug, sqlx::FromRow)]
+#[derive(Serialize, Debug, sqlx::FromRow, TS)]
 pub struct SelectCountry {
     pub id: i64,
     pub name: String,
