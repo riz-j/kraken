@@ -1,6 +1,6 @@
 use crate::{
-    models::country_model::{InsertCountry, SelectCountry, UpdateCountry},
-    schemas::country_schema::CountryExtendedSchema,
+    models::country_model::{InsertCountry, UpdateCountry},
+    schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
     services::auth_service,
     stores::{country_store, user_store},
 };
@@ -28,9 +28,15 @@ async fn get_country_by_id(
     Json(country.into_extended_schema().await)
 }
 
-async fn list_countries() -> Result<(StatusCode, Json<Vec<SelectCountry>>), Response> {
+async fn list_countries() -> Result<(StatusCode, Json<Vec<CountrySummarizedSchema>>), Response> {
     match country_store::list_countries().await {
-        Ok(countries) => Ok((StatusCode::OK, Json(countries))),
+        Ok(countries) => {
+            let countries_schema = countries
+                .iter()
+                .map(|country| country.into_summarized_schema())
+                .collect();
+            Ok((StatusCode::OK, Json(countries_schema)))
+        }
         Err(err) => {
             println!("--> Error listing countries: {}", err);
             Err((

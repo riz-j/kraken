@@ -5,6 +5,15 @@ use crate::models::city_model::SelectCity;
 
 #[derive(Debug, Serialize, TS)]
 #[ts(export)]
+pub struct CountrySummarizedSchema {
+    pub id: i64,
+    pub name: String,
+    pub continent: Option<String>,
+    pub is_archived: bool,
+}
+
+#[derive(Debug, Serialize, TS)]
+#[ts(export)]
 pub struct CountryExtendedSchema {
     pub id: i64,
     pub name: String,

@@ -36,11 +36,12 @@ impl SelectCity {
 
     pub async fn into_extended_schema(&self) -> CityExtendedSchema {
         let country = self.get_country().await.unwrap();
+        let country_summarized_schema = country.into_summarized_schema();
 
         CityExtendedSchema {
             id: self.id,
             name: self.name.clone(),
-            country: country,
+            country: country_summarized_schema,
         }
     }
 }
