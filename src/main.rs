@@ -12,6 +12,10 @@ fn static_router() -> Router {
     Router::new().nest_service("/", get_service(ServeDir::new("./public")))
 }
 
+fn frontend_router() -> Router {
+    Router::new().nest_service("/", ServeDir::new("./frontend-main/dist"))
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     dotenvy::dotenv()?;
@@ -21,10 +25,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .merge(country_router())
         .merge(city_router())
         .layer(CorsLayer::permissive())
-        .layer(axum::middleware::from_fn(require_auth))
+        // .layer(axum::middleware::from_fn(require_auth))
         .layer(axum::middleware::from_fn(print_country_id))
         .merge(auth_router())
-        .fallback_service(static_router());
+        .fallback_service(frontend_router());
 
     axum::Server::bind(&"0.0.0.0:2900".parse().unwrap())
         .serve(app.into_make_service())
