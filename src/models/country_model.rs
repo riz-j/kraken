@@ -45,12 +45,16 @@ impl SelectCountry {
 
     pub async fn into_extended_schema(&self) -> CountryExtendedSchema {
         let cities = self.get_cities().await;
+        let cities_summarized = cities
+            .iter()
+            .map(|city| city.into_summarized_schema())
+            .collect();
 
         CountryExtendedSchema {
             id: self.id,
             name: self.name.clone(),
             continent: self.continent.clone(),
-            cities: cities,
+            cities: cities_summarized,
             is_archived: self.is_archived,
         }
     }
