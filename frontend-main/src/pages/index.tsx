@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import useCountriesStore from "../stores/countriesStore";
+import useCountriesStore from "@/stores/countriesStore";
 
 export default function Home() {
   const $countries = useCountriesStore();

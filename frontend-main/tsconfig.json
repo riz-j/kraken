@@ -20,7 +20,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@kraken_bindings/*": ["../bindings/*"]
+      "@kraken_bindings/*": ["../bindings/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src", "../bindings/*.ts"],
