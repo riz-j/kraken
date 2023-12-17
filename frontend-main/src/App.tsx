@@ -18,7 +18,8 @@ function App() {
 
   return (
     <>
-      <h3>The country {country?.name} has {country?.cities.length} cities, namely {country?.cities.map(city => `${city.name}, `)}</h3>
+      <h3>The country {country?.name} has {country?.cities.length} cities, namely {country?.cities.map((city, index) => `${index + 1}) ${city.name} `)}</h3>
+      <h3>The coutnry of {country?.name}'s archive status is: {JSON.stringify(country?.is_archived)}</h3>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
