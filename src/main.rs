@@ -12,7 +12,7 @@ fn static_router() -> Router {
     Router::new().nest_service("/", get_service(ServeDir::new("./public")))
 }
 
-fn frontend_router() -> Router {
+fn office_frontend_router() -> Router {
     Router::new()
         .route(
             "/office",
@@ -39,7 +39,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .layer(CorsLayer::permissive())
         .layer(axum::middleware::from_fn(print_country_id))
         .merge(auth_router())
-        .merge(frontend_router())
+        .merge(office_frontend_router())
         .fallback_service(static_router());
 
     axum::Server::bind(&"0.0.0.0:2900".parse().unwrap())
