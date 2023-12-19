@@ -1,6 +1,9 @@
-use axum::response::IntoResponse;
+use axum::body::Body;
+use axum::extract::{path, Path};
+use axum::http::Request;
+use axum::response::{IntoResponse, Response};
 use axum::routing::{get, get_service};
-use axum::Router;
+use axum::{Router, ServiceExt};
 use kraken::middlewares::auth_middleware::{print_country_id, require_auth};
 use kraken::routers::auth_router::auth_router;
 use kraken::routers::city_router::city_router;
@@ -13,6 +16,11 @@ fn static_router() -> Router {
     Router::new().nest_service("/", get_service(ServeDir::new("./public")))
 }
 
+// fn office_assets(Path(filename): Path<String>) -> ServeDir {
+//     let fileserve = ServeFile::new("./frontend-main/dist/index.html").into();
+//     fileserve
+// }
+
 fn frontend_router() -> Router {
     Router::new()
         // .route("/", get_service(ServeDir::new("./frontend-main/dist")))
@@ -21,18 +29,17 @@ fn frontend_router() -> Router {
             "/office",
             get_service(ServeFile::new("./frontend-main/dist/index.html")),
         )
-        .route(
-            "/office/assets/index-junbqs7h.js",
-            get_service(ServeFile::new(
-                "./frontend-main/dist/assets/index-junbqs7h.js",
-            )),
+        // .merge(office_router())
+        .nest_service(
+            "/office/assets",
+            ServeDir::new("./frontend-main/dist/assets"),
         )
-        .route(
-            "/office/assets/index-EnuhBH9F.css",
-            get_service(ServeFile::new(
-                "./frontend-main/dist/assets/index-EnuhBH9F.css",
-            )),
-        )
+        // .route(
+        //     "/office/assets/index-EnuhBH9F.css",
+        //     get_service(ServeFile::new(
+        //         "./frontend-main/dist/assets/index-EnuhBH9F.css",
+        //     )),
+        // )
         .route(
             "/office/*path",
             get_service(ServeFile::new("./frontend-main/dist/index.html")),
