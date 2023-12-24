@@ -84,6 +84,6 @@ async fn signup(Json(payload): Json<InsertUser>) -> impl IntoResponse {
 
 pub fn auth_router() -> Router {
     Router::new()
-        .route("/auth/login", post(login))
-        .route("/auth/signup", post(signup))
+        .route("/api/auth/login", post(login))
+        .route("/api/auth/signup", post(signup))
 }

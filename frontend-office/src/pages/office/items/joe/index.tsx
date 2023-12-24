@@ -6,7 +6,7 @@ export default function Joe() {
     const [city, setCity] = useState<CityExtendedSchema | undefined>();
 
     const fetchCity = async () => {
-        const response = await fetch("http://localhost:2900/cities/2");
+        const response = await fetch("http://localhost:2900/api/cities/2");
         const result = await response.json() as CityExtendedSchema;
         setCity(result);
     }

@@ -17,7 +17,7 @@ mounted() {
 },
 methods: {
     populateCountries() {
-        fetch("/countries")
+        fetch("/api/countries")
             .then(res => res.json())
             .then(data => this.countries = data);
     },
@@ -26,7 +26,7 @@ methods: {
             return;
         }
             
-        fetch("/countries", {
+        fetch("/api/countries", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -40,7 +40,7 @@ methods: {
         );
     },
     handleDelete(countryId) {
-        fetch(`/countries/${countryId}`, {
+        fetch(`/api/countries/${countryId}`, {
             method: "DELETE"
         })
         .then(res => res.ok 
