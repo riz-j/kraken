@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+    .main-font {
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+}
+
+.btn {
+    @apply rounded-lg;
+}
+
+/* body {
+    @apply main-font;
+} */

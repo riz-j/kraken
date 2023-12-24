@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import useCountriesStore from "@/stores/countriesStore";
 import { Link } from "react-router-dom";
+import Navigation from "@/components/Navigation";
 
 export default function Home() {
   const $countries = useCountriesStore();
@@ -11,6 +12,7 @@ export default function Home() {
 
   return (
     <>
+      <Navigation />
       <h2>Welcome to the office page!</h2>
       <main>
         <div className="p-5">
