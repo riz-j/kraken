@@ -16,6 +16,7 @@ export default function Home() {
       <h2>Welcome to the office page!</h2>
       <main>
         <div className="p-5">
+          <h1>THE BASE URL IS: {JSON.stringify(import.meta.env)}</h1>
           <h3>Here are a list of Countries:</h3>
           <Link to={"/"}>Home Page</Link>
           {$countries.countries.map(country => 

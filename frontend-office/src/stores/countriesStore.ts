@@ -12,7 +12,7 @@ const useCountriesStore = create<CountriesState>()(
     (set) => ({
       countries: [],
       populateCountries: async () => {
-          const response = await fetch('http://localhost:2900/api/countries');
+          const response = await fetch('/api/countries');
           const result = await response.json();
           set({ countries: result });
       },
