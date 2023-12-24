@@ -17,7 +17,7 @@ export default ({ mode }) => {
     server: {
       proxy: {
         '/api': {
-          target: 'http://localhost:2900',
+          target: process.env.VITE_API_URL,
           changeOrigin: true,
           secure: false,
         }
