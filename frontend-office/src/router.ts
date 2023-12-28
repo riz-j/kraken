@@ -8,6 +8,7 @@ export type Path =
   | `/office`
   | `/office/items`
   | `/office/items/joe`
+  | `/office/shadcn`
 
 export type Params = {
   
