@@ -1,8 +1,7 @@
 use crate::{
-    models::country_model::{InsertCountry, UpdateCountry},
+    models::{country_model::{InsertCountry, UpdateCountry}, user_model::UserId},
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
-    services::auth_service,
-    stores::{country_store, user_store},
+    stores::{country_store, user_store}, get_user_model,
 };
 use axum::{
     body::Body,
@@ -14,14 +13,10 @@ use axum::{
 };
 use serde_json::json;
 
-async fn get_country_by_id(
-    Path(country_id): Path<i64>,
-    req: Request<Body>,
-) -> Json<CountryExtendedSchema> {
-    // let user_id = auth_service::get_user_id(&req).unwrap();
-    // let user = user_store::get_user(&user_id).await.unwrap();
+async fn get_country_by_id(Path(country_id): Path<i64>, req: Request<Body>) -> Json<CountryExtendedSchema> {
+    let user = get_user_model!(req).await;
 
-    // println!("User ID is: {:?}", user);
+    println!("User ID is: {:?}", user);
 
     let country = country_store::select_country(country_id).await.unwrap();
 

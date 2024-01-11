@@ -20,6 +20,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let app = Router::new()
         .merge(country_router())
+        .layer(axum::middleware::from_fn(require_auth))
         .merge(city_router())
         .layer(CorsLayer::permissive())
         .layer(axum::middleware::from_fn(print_country_id))

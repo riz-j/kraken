@@ -26,4 +26,7 @@ pub mod middlewares {
 pub mod services {
     pub mod auth_service;
 }
+pub mod macros {
+    pub mod get_user_model;
+}
 pub mod db;
