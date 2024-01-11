@@ -14,14 +14,16 @@ pub struct SelectCountry {
     pub is_archived: bool,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, TS)]
+#[ts(export)]
 #[allow(dead_code)]
 pub struct InsertCountry {
     pub name: String,
     pub continent: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, TS)]
+#[ts(export)]
 #[allow(dead_code)]
 pub struct UpdateCountry {
     pub name: Option<String>,

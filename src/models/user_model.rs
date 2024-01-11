@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct UserId {
@@ -14,7 +15,8 @@ pub struct SelectUser {
     pub last_name: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize, TS)]
+#[ts(export)]
 pub struct InsertUser {
     pub email: String,
     pub password: String,
