@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import useCountriesStore from "@/stores/countriesStore";
 import { Link } from "react-router-dom";
-import { InsertCountry } from "@kraken_bindings/InsertCountry";
+import { CountryInsert } from "@kraken_bindings/CountryInsert";
 
 export default function Home() {
   const $countries = useCountriesStore();
-  const [insertCountry, setInsertCountry] = useState<InsertCountry>({
+  const [countryInsert, setCountryInsert] = useState<CountryInsert>({
     name: "",
     continent: ""
   });
@@ -19,7 +19,7 @@ export default function Home() {
 
     fetch("/api/countries", {
       method: "POST",
-      body: JSON.stringify(insertCountry)
+      body: JSON.stringify(countryInsert)
     }).then(() => {
       console.log("SUCCESS")
       $countries.populateCountries();
@@ -31,8 +31,8 @@ export default function Home() {
   return (
     <>
       <form onSubmit={handleCountryInsert}>
-        <input placeholder="name" onChange={(e) => setInsertCountry(state => ({...state, name: e.target.value }))}/>
-        <input placeholder="continent" onChange={(e) => setInsertCountry(state => ({...state, continent: e.target.value }))}/>
+        <input placeholder="name" onChange={(e) => setCountryInsert(state => ({...state, name: e.target.value }))}/>
+        <input placeholder="continent" onChange={(e) => setCountryInsert(state => ({...state, continent: e.target.value }))}/>
       </form>
       <h2>Welcome to the home page!</h2>
       <main>
