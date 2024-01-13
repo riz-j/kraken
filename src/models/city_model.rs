@@ -8,7 +8,7 @@ use ts_rs::TS;
 
 use super::country_model::CountrySelect;
 
-#[derive(Debug, Serialize, sqlx::FromRow, TS)]
+#[derive(Debug, Serialize, sqlx::FromRow)]
 #[allow(dead_code)]
 pub struct CitySelect {
     pub id: i64,
@@ -16,6 +16,8 @@ pub struct CitySelect {
     pub country_id: Option<i64>,
 }
 
+#[derive(Debug, Serialize, sqlx::FromRow, TS)]
+#[ts(export)]
 #[allow(dead_code)]
 pub struct CityInsert {
     pub name: String,
