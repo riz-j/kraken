@@ -6,7 +6,7 @@ createApp({
 		const password = ref("");
 
 		const handleLogin = () => {
-			fetch("/auth/login", {
+			fetch("/api/auth/login", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
