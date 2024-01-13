@@ -95,7 +95,7 @@ pub fn country_router() -> Router {
         .route(
             "/api/countries/:country_id",
             get(get_country_by_id)
-                .put(update_country)
+                .patch(update_country)
                 .delete(delete_country),
         )
 }
