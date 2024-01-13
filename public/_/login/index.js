@@ -15,7 +15,7 @@ createApp({
 				})
 			}).then(res => {
 				if (res.ok) {
-					window.location.href = "/countries";
+					window.location.href = "/api/countries";
 				}
 			});
 		};
