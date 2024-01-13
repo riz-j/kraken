@@ -1,8 +1,8 @@
 use crate::db::{self, POOL};
-use crate::models::city_model::{InsertCity, SelectCity};
+use crate::models::city_model::{CityInsert, CitySelect};
 use sqlx::Error;
 
-pub async fn insert_city(insert_city: &InsertCity) -> Result<(), Error> {
+pub async fn insert_city(insert_city: &CityInsert) -> Result<(), Error> {
     sqlx::query(
         "
         INSERT INTO cities (name, country_id)
@@ -19,8 +19,8 @@ pub async fn insert_city(insert_city: &InsertCity) -> Result<(), Error> {
     Ok(())
 }
 
-pub async fn select_city(city_id: i64) -> Result<SelectCity, Error> {
-    let city = sqlx::query_as::<_, SelectCity>(
+pub async fn select_city(city_id: i64) -> Result<CitySelect, Error> {
+    let city = sqlx::query_as::<_, CitySelect>(
         "
         SELECT id, name, country_id
         FROM cities WHERE id = $1;
@@ -33,8 +33,8 @@ pub async fn select_city(city_id: i64) -> Result<SelectCity, Error> {
     Ok(city)
 }
 
-pub async fn list_cities() -> Result<Vec<SelectCity>, Error> {
-    let cities = sqlx::query_as::<_, SelectCity>(
+pub async fn list_cities() -> Result<Vec<CitySelect>, Error> {
+    let cities = sqlx::query_as::<_, CitySelect>(
         "
         SELECT * 
         FROM cities;
@@ -46,8 +46,8 @@ pub async fn list_cities() -> Result<Vec<SelectCity>, Error> {
     Ok(cities)
 }
 
-pub async fn list_cities_by_country(country_id: i64) -> Result<Vec<SelectCity>, Error> {
-    let cities = sqlx::query_as::<_, SelectCity>(
+pub async fn list_cities_by_country(country_id: i64) -> Result<Vec<CitySelect>, Error> {
+    let cities = sqlx::query_as::<_, CitySelect>(
         "
         SELECT *
         FROM cities

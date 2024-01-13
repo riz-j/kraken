@@ -1,4 +1,4 @@
-use super::city_model::SelectCity;
+use super::city_model::CitySelect;
 use crate::{
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
     stores::city_store,
@@ -32,7 +32,7 @@ pub struct CountryUpdate {
 }
 
 impl CountrySelect {
-    pub async fn get_cities(&self) -> Vec<SelectCity> {
+    pub async fn get_cities(&self) -> Vec<CitySelect> {
         city_store::list_cities_by_country(self.id).await.unwrap()
     }
 

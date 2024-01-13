@@ -10,19 +10,19 @@ use super::country_model::CountrySelect;
 
 #[derive(Debug, Serialize, sqlx::FromRow, TS)]
 #[allow(dead_code)]
-pub struct SelectCity {
+pub struct CitySelect {
     pub id: i64,
     pub name: String,
     pub country_id: Option<i64>,
 }
 
 #[allow(dead_code)]
-pub struct InsertCity {
+pub struct CityInsert {
     pub name: String,
     pub country_id: Option<i64>,
 }
 
-impl SelectCity {
+impl CitySelect {
     pub async fn get_country(&self) -> Result<CountrySelect, Error> {
         country_store::select_country(self.country_id.unwrap()).await
     }
