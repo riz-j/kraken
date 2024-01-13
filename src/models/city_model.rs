@@ -6,7 +6,7 @@ use serde::Serialize;
 use sqlx::Error;
 use ts_rs::TS;
 
-use super::country_model::SelectCountry;
+use super::country_model::CountrySelect;
 
 #[derive(Debug, Serialize, sqlx::FromRow, TS)]
 #[allow(dead_code)]
@@ -23,7 +23,7 @@ pub struct InsertCity {
 }
 
 impl SelectCity {
-    pub async fn get_country(&self) -> Result<SelectCountry, Error> {
+    pub async fn get_country(&self) -> Result<CountrySelect, Error> {
         country_store::select_country(self.country_id.unwrap()).await
     }
 

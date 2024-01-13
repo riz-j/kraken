@@ -7,7 +7,7 @@ pub struct UserId {
 }
 
 #[derive(Serialize, Debug, sqlx::FromRow)]
-pub struct SelectUser {
+pub struct UserSelect {
     pub id: i64,
     pub email: String,
     pub password: String,
@@ -17,7 +17,7 @@ pub struct SelectUser {
 
 #[derive(Debug, Deserialize, TS)]
 #[ts(export)]
-pub struct InsertUser {
+pub struct UserInsert {
     pub email: String,
     pub password: String,
     pub first_name: String,

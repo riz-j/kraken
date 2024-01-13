@@ -1,7 +1,7 @@
 use crate::{
     models::{
         auth_model::{Claims, LoginRequest},
-        user_model::InsertUser,
+        user_model::UserInsert,
     },
     stores::{auth_store, user_store},
 };
@@ -51,7 +51,7 @@ async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
     response
 }
 
-async fn signup(Json(payload): Json<InsertUser>) -> impl IntoResponse {
+async fn signup(Json(payload): Json<UserInsert>) -> impl IntoResponse {
     let user_id_model = user_store::insert_user(&payload).await.unwrap();
 
     let encoding_key = EncodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());

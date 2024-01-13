@@ -1,8 +1,8 @@
 use crate::db;
-use crate::models::country_model::{InsertCountry, SelectCountry, UpdateCountry};
+use crate::models::country_model::{CountryInsert, CountrySelect, CountryUpdate};
 use sqlx::Error;
 
-pub async fn insert_country(country: &InsertCountry) -> Result<(), Error> {
+pub async fn insert_country(country: &CountryInsert) -> Result<(), Error> {
     sqlx::query(
         "
         INSERT INTO countries (name, continent)
@@ -19,8 +19,8 @@ pub async fn insert_country(country: &InsertCountry) -> Result<(), Error> {
     Ok(())
 }
 
-pub async fn list_countries() -> Result<Vec<SelectCountry>, Error> {
-    let countries = sqlx::query_as::<_, SelectCountry>(
+pub async fn list_countries() -> Result<Vec<CountrySelect>, Error> {
+    let countries = sqlx::query_as::<_, CountrySelect>(
         "
         SELECT *
         FROM countries;
@@ -32,8 +32,8 @@ pub async fn list_countries() -> Result<Vec<SelectCountry>, Error> {
     Ok(countries)
 }
 
-pub async fn select_country(country_id: i64) -> Result<SelectCountry, Error> {
-    let country = sqlx::query_as::<_, SelectCountry>(
+pub async fn select_country(country_id: i64) -> Result<CountrySelect, Error> {
+    let country = sqlx::query_as::<_, CountrySelect>(
         "
         SELECT *
         FROM countries WHERE id = $1
@@ -46,7 +46,7 @@ pub async fn select_country(country_id: i64) -> Result<SelectCountry, Error> {
     Ok(country)
 }
 
-pub async fn update_country(country_id: i64, update_country: &UpdateCountry) -> Result<(), Error> {
+pub async fn update_country(country_id: i64, update_country: &CountryUpdate) -> Result<(), Error> {
     sqlx::query(
         "
         UPDATE countries

@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
 #[derive(Serialize, Debug, sqlx::FromRow, TS)]
-pub struct SelectCountry {
+pub struct CountrySelect {
     pub id: i64,
     pub name: String,
     pub continent: Option<String>,
@@ -17,7 +17,7 @@ pub struct SelectCountry {
 #[derive(Deserialize, TS)]
 #[ts(export)]
 #[allow(dead_code)]
-pub struct InsertCountry {
+pub struct CountryInsert {
     pub name: String,
     pub continent: String,
 }
@@ -25,13 +25,13 @@ pub struct InsertCountry {
 #[derive(Deserialize, TS)]
 #[ts(export)]
 #[allow(dead_code)]
-pub struct UpdateCountry {
+pub struct CountryUpdate {
     pub name: Option<String>,
     pub continent: Option<String>,
     pub is_archived: Option<bool>,
 }
 
-impl SelectCountry {
+impl CountrySelect {
     pub async fn get_cities(&self) -> Vec<SelectCity> {
         city_store::list_cities_by_country(self.id).await.unwrap()
     }

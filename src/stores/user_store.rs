@@ -1,9 +1,9 @@
 use crate::{
     db,
-    models::user_model::{InsertUser, SelectUser, UserId},
+    models::user_model::{UserId, UserInsert, UserSelect},
 };
 
-pub async fn insert_user(user: &InsertUser) -> Result<UserId, sqlx::Error> {
+pub async fn insert_user(user: &UserInsert) -> Result<UserId, sqlx::Error> {
     let pool = db::POOL.get().unwrap();
     let mut tx = pool.begin().await?;
 
@@ -35,8 +35,8 @@ pub async fn insert_user(user: &InsertUser) -> Result<UserId, sqlx::Error> {
     Ok(user_id)
 }
 
-pub async fn get_user(user_id: &i64) -> Result<SelectUser, sqlx::Error> {
-    let user = sqlx::query_as::<_, SelectUser>(
+pub async fn get_user(user_id: &i64) -> Result<UserSelect, sqlx::Error> {
+    let user = sqlx::query_as::<_, UserSelect>(
         "
         SELECT * 
         FROM users

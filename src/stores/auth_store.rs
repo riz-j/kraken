@@ -1,10 +1,10 @@
 use crate::{
     db,
-    models::{auth_model::LoginRequest, user_model::SelectUser},
+    models::{auth_model::LoginRequest, user_model::UserSelect},
 };
 
-pub async fn login(login_request: &LoginRequest) -> Result<SelectUser, sqlx::Error> {
-    let user = sqlx::query_as::<_, SelectUser>(
+pub async fn login(login_request: &LoginRequest) -> Result<UserSelect, sqlx::Error> {
+    let user = sqlx::query_as::<_, UserSelect>(
         "
         SELECT * 
         FROM users

@@ -2,7 +2,7 @@ use crate::{
     get_user_model,
     models::{
         auth_model::Claims,
-        country_model::{InsertCountry, UpdateCountry},
+        country_model::{CountryInsert, CountryUpdate},
     },
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
     stores::{country_store, user_store},
@@ -50,7 +50,7 @@ async fn list_countries() -> Result<(StatusCode, Json<Vec<CountrySummarizedSchem
     }
 }
 
-async fn create_country(Json(payload): Json<InsertCountry>) -> Result<StatusCode, Response> {
+async fn create_country(Json(payload): Json<CountryInsert>) -> Result<StatusCode, Response> {
     match country_store::insert_country(&payload).await {
         Ok(_) => Ok(StatusCode::OK),
         Err(err) => {
@@ -66,7 +66,7 @@ async fn create_country(Json(payload): Json<InsertCountry>) -> Result<StatusCode
 
 async fn update_country(
     Path(country_id): Path<i64>,
-    Json(payload): Json<UpdateCountry>,
+    Json(payload): Json<CountryUpdate>,
 ) -> StatusCode {
     country_store::update_country(country_id, &payload)
         .await
