@@ -1,8 +1,8 @@
 use crate::{
     get_user_model,
     models::{
+        auth_model::Claims,
         country_model::{InsertCountry, UpdateCountry},
-        user_model::UserId,
     },
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
     stores::{country_store, user_store},

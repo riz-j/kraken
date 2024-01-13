@@ -4,8 +4,8 @@ macro_rules! get_user_model {
         async {
             let user_id = $req
                 .extensions()
-                .get::<UserId>()
-                .map(|user_id| user_id.id)
+                .get::<Claims>()
+                .map(|claim| claim.user_id)
                 .unwrap();
             user_store::get_user(&user_id).await.unwrap()
         }

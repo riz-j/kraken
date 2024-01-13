@@ -1,7 +1,4 @@
-use crate::{
-    models::{auth_model::Claims, user_model::UserId},
-    services::auth_service::cookie_extractor,
-};
+use crate::{models::auth_model::Claims, services::auth_service::cookie_extractor};
 use axum::{
     body::BoxBody,
     extract::Path,
@@ -28,7 +25,7 @@ pub async fn require_auth<B>(mut req: Request<B>, next: Next<B>) -> Response<Box
         Err(_) => return (StatusCode::UNAUTHORIZED, "Token is invalid").into_response(),
     };
 
-    req.extensions_mut().insert(UserId { id: claims.user_id });
+    req.extensions_mut().insert(claims);
 
     next.run(req).await
 }
