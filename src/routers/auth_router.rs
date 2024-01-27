@@ -31,7 +31,7 @@ async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
     let claims = Claims {
         user_id: user.id,
         iat: timestamp_now,
-        exp: timestamp_now + (15 * 60),
+        exp: timestamp_now + (30 * 60),
     };
 
     let token = encode(&Header::default(), &claims, &encoding_key).unwrap();
@@ -59,7 +59,7 @@ async fn signup(Json(payload): Json<UserInsert>) -> impl IntoResponse {
     let claims = Claims {
         user_id: user_id_model.id,
         iat: timestamp_now,
-        exp: timestamp_now + (15 * 60),
+        exp: timestamp_now + (30 * 60),
     };
 
     let token = encode(&Header::default(), &claims, &encoding_key).unwrap();
