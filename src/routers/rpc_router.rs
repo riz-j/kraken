@@ -1,5 +1,6 @@
 use axum::{response::IntoResponse, routing::post, Json, Router};
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 
 #[derive(Deserialize, Serialize, Debug)]
 struct PrintNameParams {
@@ -57,7 +58,10 @@ async fn handle_rpc_router(Json(payload): Json<RpcRequest>) -> impl IntoResponse
         _ => unimplemented!(),
     }
 
-    rpc_req_id
+    Json(json!({
+        "id": rpc_req_id,
+        "result": {}
+    }))
 }
 
 pub fn rpc_router() -> Router {
