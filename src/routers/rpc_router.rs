@@ -13,9 +13,10 @@ struct PrintNumberParams {
 
 #[derive(Deserialize, Serialize)]
 #[serde(untagged)]
+#[allow(non_camel_case_types)]
 enum RpcParams {
-    PrintName(PrintNameParams),
-    PrintNumber(PrintNumberParams),
+    print_name(PrintNameParams),
+    print_number(PrintNumberParams),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -39,11 +40,11 @@ async fn handle_rpc_router(Json(payload): Json<RpcRequest>) -> impl IntoResponse
 
     match payload.method.as_str() {
         "print_name" => match payload.param {
-            RpcParams::PrintName(params) => print_name(params.name),
+            RpcParams::print_name(params) => print_name(params.name),
             _ => eprintln!("Invalid params for method {}", payload.method),
         },
         "print_number" => match payload.param {
-            RpcParams::PrintNumber(params) => print_number(params.number),
+            RpcParams::print_number(params) => print_number(params.number),
             _ => eprintln!("Invalid params for method {}", payload.method),
         },
         _ => unimplemented!(),
