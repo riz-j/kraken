@@ -27,26 +27,29 @@ struct RpcRequest {
     param: RpcParams,
 }
 
-fn print_number(number: i32) {
-    println!("Number is {}", number);
+fn print_number(params: PrintNumberParams) {
+    println!("Number is {}", params.number);
 }
 
-fn print_name(name: String) {
-    println!("Name is {}", name);
+fn print_name(params: PrintNameParams) {
+    println!("Name is {}", params.name);
+}
+
+macro_rules! handle_payload {
+    ($func:ident, $param:expr) => {
+        match $param {
+            RpcParams::$func(params) => $func(params),
+            _ => eprintln!("Invalid params for method {}", stringify!($func)),
+        }
+    };
 }
 
 async fn handle_rpc_router(Json(payload): Json<RpcRequest>) -> impl IntoResponse {
     let rpc_req_id = payload.id;
 
     match payload.method.as_str() {
-        "print_name" => match payload.param {
-            RpcParams::print_name(params) => print_name(params.name),
-            _ => eprintln!("Invalid params for method {}", payload.method),
-        },
-        "print_number" => match payload.param {
-            RpcParams::print_number(params) => print_number(params.number),
-            _ => eprintln!("Invalid params for method {}", payload.method),
-        },
+        "print_name" => handle_payload!(print_name, payload.param),
+        "print_number" => handle_payload!(print_number, payload.param),
         _ => unimplemented!(),
     }
 
