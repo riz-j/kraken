@@ -1,21 +1,20 @@
 use axum::{response::IntoResponse, routing::post, Json, Router};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 struct PrintNameParams {
-    name: String,
-    age: Option<u32>,
+    first_name: String,
+    last_name: String,
 }
 
 fn print_name(params: PrintNameParams) {
-    println!("Name is {}", params.name);
-
-    if let Some(age) = params.age {
-        println!("Age is {}", age);
-    }
+    println!(
+        "Your fullname is {} {}",
+        params.first_name, params.last_name
+    );
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Debug)]
 struct PrintNumberParams {
     number: i32,
 }
