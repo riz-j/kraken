@@ -4,6 +4,7 @@ use kraken::middlewares::auth_middleware::{print_country_id, require_auth};
 use kraken::routers::auth_router::auth_router;
 use kraken::routers::city_router::city_router;
 use kraken::routers::country_router::country_router;
+use kraken::routers::rpc_router::rpc_router;
 use kraken::routers::spa_router;
 use std::error::Error;
 use tower_http::cors::CorsLayer;
@@ -25,6 +26,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .layer(CorsLayer::permissive())
         .layer(axum::middleware::from_fn(print_country_id))
         .merge(auth_router())
+        .nest("/rpc", rpc_router())
         .merge(spa_router::office_router())
         .fallback_service(static_router());
 

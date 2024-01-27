@@ -14,6 +14,7 @@ pub mod routers {
     pub mod auth_router;
     pub mod city_router;
     pub mod country_router;
+    pub mod rpc_router;
     pub mod spa_router;
 }
 pub mod schemas {
