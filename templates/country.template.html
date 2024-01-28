@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welcome to the nation of {{ country.name }}</h1>
+    <h2>List of cities in {{ country.name }}:</h2>
+    <ol>
+    {% for city in country.cities %}
+        <li>{{ city.name }}</li>
+    {% endfor %}
+    </ol>
+</body>
+</html>
