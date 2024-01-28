@@ -1,6 +1,7 @@
 use axum::routing::get_service;
 use axum::Router;
 use kraken::middlewares::auth_middleware::{print_country_id, require_auth};
+use kraken::routers::askama_router::askama_router;
 use kraken::routers::auth_router::auth_router;
 use kraken::routers::city_router::city_router;
 use kraken::routers::country_router::country_router;
@@ -20,8 +21,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     let app = Router::new()
         .merge(country_router())
-        .layer(axum::middleware::from_fn(require_auth))
         .merge(city_router())
+        .layer(axum::middleware::from_fn(require_auth))
+        .merge(askama_router())
         .layer(CorsLayer::permissive())
         .layer(axum::middleware::from_fn(print_country_id))
         .merge(auth_router())
