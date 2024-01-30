@@ -1,4 +1,4 @@
 /target
-my_database.db
+db_main.db
 .env
 /migrations

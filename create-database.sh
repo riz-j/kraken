@@ -1,6 +1,6 @@
 #!/bin/bash
 
-database_file="my_database.db"
+database_file="db_main.db"
 
 # Check if the database file exists
 if [ -e "$database_file" ]; then
