@@ -65,6 +65,8 @@ INSERT INTO users VALUES(2,'jeremy@gmail.com','12345','Jeremy','Sinister');
 INSERT INTO users VALUES(3,'jenny@gmail.com','12345','Jenny','Gump');
 INSERT INTO users VALUES(4,'holly@gmail.com','12345','Holly','Hills');
 INSERT INTO users VALUES(5,'sam@gmail.com','12345','Sam','Smith');
+INSERT INTO users VALUES(6,'joe@gmail.com','123456','Joe','Joe');
+INSERT INTO users VALUES(7,'rizki','1234','rizki','rizki');
 DELETE FROM sqlite_sequence;
 INSERT INTO sqlite_sequence VALUES('countries',28);
 COMMIT;
