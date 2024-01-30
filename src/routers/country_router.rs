@@ -2,10 +2,10 @@ use crate::{
     get_user_model,
     models::{
         auth_model::Claims,
-        country_model::{CountryInsert, CountryUpdate},
+        country_model::{CountryInsert, CountryUpdate, CountrySelect},
     },
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
-    stores::{country_store, user_store},
+    stores::{country_store::{self, CountryStore, BaseStore}, user_store},
 };
 use axum::{
     body::Body,
@@ -31,7 +31,7 @@ async fn get_country_by_id(
 }
 
 async fn list_countries() -> Result<(StatusCode, Json<Vec<CountrySummarizedSchema>>), Response> {
-    match country_store::list_countries().await {
+    match CountryStore::list().await {
         Ok(countries) => {
             let countries_schema = countries
                 .iter()
