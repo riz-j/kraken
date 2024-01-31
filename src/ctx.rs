@@ -8,8 +8,9 @@ use axum::{
     RequestPartsExt,
 };
 
+#[derive(Debug)]
 #[allow(dead_code)]
-struct Ctx {
+pub struct Ctx {
     auth_cookie: String,
 }
 
@@ -34,7 +35,7 @@ impl<S: Send + Sync> FromRequestParts<S> for Ctx {
     }
 }
 
-struct MyError;
+pub struct MyError;
 
 impl IntoResponse for MyError {
     fn into_response(self) -> axum::response::Response {

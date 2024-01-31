@@ -1,4 +1,4 @@
-use crate::{models::auth_model::Claims, services::auth_service::cookie_extractor};
+use crate::{ctx::Ctx, models::auth_model::Claims, services::auth_service::cookie_extractor};
 use axum::{
     body::BoxBody,
     extract::Path,
@@ -10,7 +10,9 @@ use dotenvy_macro::dotenv;
 use jsonwebtoken::{decode, DecodingKey, Validation};
 use std::collections::HashMap;
 
-pub async fn require_auth<B>(mut req: Request<B>, next: Next<B>) -> Response<BoxBody> {
+pub async fn require_auth<B>(ctx: Ctx, mut req: Request<B>, next: Next<B>) -> Response<BoxBody> {
+    println!("\n---> My first Ctx content: \n{:?}", ctx);
+
     let headers = req.headers();
     let cookies = cookie_extractor(headers);
 
