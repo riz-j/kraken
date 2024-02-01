@@ -1,6 +1,10 @@
+use crate::ctx::Ctx;
 use crate::db;
 use crate::models::country_model::{CountryInsert, CountrySelect, CountryUpdate};
+use async_trait::async_trait;
 use sqlx::Error;
+
+use super::base::BaseStore;
 
 #[derive(Clone)]
 pub struct CountryStore;
@@ -8,19 +12,6 @@ pub struct CountryStore;
 impl CountryStore {
     pub fn new() -> Self {
         Self
-    }
-
-    pub async fn list_countries(&self) -> Result<Vec<CountrySelect>, Error> {
-        let countries = sqlx::query_as::<_, CountrySelect>(
-            "
-            SELECT *
-            FROM countries;
-            ",
-        )
-        .fetch_all(db::POOL.get().unwrap())
-        .await?;
-
-        Ok(countries)
     }
 
     pub async fn insert_country(&self, country: &CountryInsert) -> Result<(), Error> {
@@ -38,20 +29,6 @@ impl CountryStore {
         println!("Country '{}' has been inserted!", country.name.to_string());
 
         Ok(())
-    }
-
-    pub async fn select_country(&self, country_id: i64) -> Result<CountrySelect, Error> {
-        let country = sqlx::query_as::<_, CountrySelect>(
-            "
-        SELECT *
-        FROM countries WHERE id = $1
-        ",
-        )
-        .bind(country_id)
-        .fetch_one(db::POOL.get().unwrap())
-        .await?;
-
-        Ok(country)
     }
 
     pub async fn update_country(
@@ -93,5 +70,35 @@ impl CountryStore {
         .await?;
 
         Ok(())
+    }
+}
+
+#[async_trait]
+impl BaseStore<CountrySelect> for CountryStore {
+    async fn list(&self, _ctx: &Ctx) -> Result<Vec<CountrySelect>, sqlx::Error> {
+        let countries = sqlx::query_as::<_, CountrySelect>(
+            "
+            SELECT *
+            FROM countries;
+            ",
+        )
+        .fetch_all(db::POOL.get().unwrap())
+        .await?;
+
+        Ok(countries)
+    }
+
+    async fn get(&self, _ctx: &Ctx, id: i64) -> Result<CountrySelect, sqlx::Error> {
+        let country = sqlx::query_as::<_, CountrySelect>(
+            "
+        SELECT *
+        FROM countries WHERE id = $1
+        ",
+        )
+        .bind(id)
+        .fetch_one(db::POOL.get().unwrap())
+        .await?;
+
+        Ok(country)
     }
 }

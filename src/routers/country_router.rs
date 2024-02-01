@@ -3,7 +3,7 @@ use crate::{
     mc::ModelController,
     models::country_model::{CountryInsert, CountryUpdate},
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
-    stores::legacy_country_store,
+    stores::{base::BaseStore, legacy_country_store},
 };
 use axum::{
     extract::{Path, State},
@@ -21,7 +21,7 @@ async fn list_countries(
     let user = ctx.get_user().await;
     println!("\n---> This is called from the Country Router\n{:?}", user);
 
-    let countries = mc.country_store.list_countries().await.unwrap();
+    let countries = mc.country_store.list(&ctx).await.unwrap();
     let countries_summ = countries
         .iter()
         .map(|country| country.into_summarized_schema())
@@ -37,7 +37,7 @@ async fn get_country_by_id(
 ) -> Json<CountryExtendedSchema> {
     println!("User ID is: {:?}", ctx.get_user().await.id);
 
-    let country = mc.country_store.select_country(country_id).await.unwrap();
+    let country = mc.country_store.get(&ctx, country_id).await.unwrap();
 
     Json(country.into_extended_schema().await)
 }
