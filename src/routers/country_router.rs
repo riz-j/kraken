@@ -17,9 +17,6 @@ async fn list_countries(
     State(mc): State<ModelController>,
     ctx: Ctx,
 ) -> Result<(StatusCode, Json<Vec<CountrySummarizedSchema>>), Response> {
-    let user = ctx.get_user().await;
-    println!("\n---> This is called from the Country Router\n{:?}", user);
-
     let countries = mc.country_store.list(&ctx).await.unwrap();
     let countries_summ = countries
         .iter()
@@ -34,8 +31,6 @@ async fn get_country_by_id(
     ctx: Ctx,
     Path(country_id): Path<i64>,
 ) -> Json<CountryExtendedSchema> {
-    println!("User ID is: {:?}", ctx.get_user().await.id);
-
     let country = mc.country_store.select(&ctx, country_id).await.unwrap();
 
     Json(country.into_extended_schema().await)
