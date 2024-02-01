@@ -14,24 +14,24 @@
             <input type="password" id="password" name="password" class="input input-bordered" />
             <input type="submit" class="btn" />
         </form>
-        <script>
-        function handleLogin(event) {
-            event.preventDefault();
-
-            fetch("/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email: document.getElementById("email").value,
-                    password: document.getElementById("password").value
-                })
-                }).then(res => {
-                    if (res.ok) {
-                        window.location.href = "/api/countries";
-                    }
-            });                
-        }
-        </script>
     </div>
+<script>
+    function handleLogin(event) {
+        event.preventDefault();
+        
+        fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            })
+            }).then(res => {
+                if (res.ok) {
+                    window.location.href = "/api/countries";
+                }
+        });                
+    }
+</script>
 </body>
 </html>
