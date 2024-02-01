@@ -14,16 +14,6 @@ use axum::{
 };
 use serde_json::json;
 
-async fn get_country_by_id(ctx: Ctx, Path(country_id): Path<i64>) -> Json<CountryExtendedSchema> {
-    println!("User ID is: {:?}", ctx.get_user().await.id);
-
-    let country = legacy_country_store::select_country(country_id)
-        .await
-        .unwrap();
-
-    Json(country.into_extended_schema().await)
-}
-
 async fn list_countries(
     State(mc): State<ModelController>,
     ctx: Ctx,
@@ -38,6 +28,18 @@ async fn list_countries(
         .collect();
 
     Ok((StatusCode::OK, Json(countries_summ)))
+}
+
+async fn get_country_by_id(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
+    Path(country_id): Path<i64>,
+) -> Json<CountryExtendedSchema> {
+    println!("User ID is: {:?}", ctx.get_user().await.id);
+
+    let country = mc.country_store.select_country(country_id).await.unwrap();
+
+    Json(country.into_extended_schema().await)
 }
 
 async fn create_country(Json(payload): Json<CountryInsert>) -> Result<StatusCode, Response> {
