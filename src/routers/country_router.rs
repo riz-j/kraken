@@ -37,23 +37,19 @@ async fn get_country_by_id(
 ) -> Json<CountryExtendedSchema> {
     println!("User ID is: {:?}", ctx.get_user().await.id);
 
-    let country = mc.country_store.get(&ctx, country_id).await.unwrap();
+    let country = mc.country_store.select(&ctx, country_id).await.unwrap();
 
     Json(country.into_extended_schema().await)
 }
 
-async fn create_country(Json(payload): Json<CountryInsert>) -> Result<StatusCode, Response> {
-    match legacy_country_store::insert_country(&payload).await {
-        Ok(_) => Ok(StatusCode::OK),
-        Err(err) => {
-            println!("--> Error creating country: {}", err);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(json!({ "message": "Error creating country" })),
-            )
-                .into_response())
-        }
-    }
+async fn create_country(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
+    Json(payload): Json<CountryInsert>,
+) -> StatusCode {
+    mc.country_store.insert(&ctx, payload).await.unwrap();
+
+    StatusCode::CREATED
 }
 
 async fn update_country(
