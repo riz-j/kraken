@@ -3,16 +3,15 @@ use crate::{
     mc::ModelController,
     models::country_model::{CountryInsert, CountryUpdate},
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
-    stores::{base::BaseStore, legacy_country_store},
+    stores::base::BaseStore,
 };
 use axum::{
     extract::{Path, State},
     http::StatusCode,
-    response::{IntoResponse, Response},
+    response::Response,
     routing::get,
     Json, Router,
 };
-use serde_json::json;
 
 async fn list_countries(
     State(mc): State<ModelController>,
@@ -53,28 +52,30 @@ async fn create_country(
 }
 
 async fn update_country(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
     Path(country_id): Path<i64>,
     Json(payload): Json<CountryUpdate>,
 ) -> StatusCode {
-    legacy_country_store::update_country(country_id, &payload)
+    mc.country_store
+        .update(&ctx, country_id, payload)
         .await
         .unwrap();
 
     StatusCode::NO_CONTENT
 }
 
-async fn delete_country(Path(country_id): Path<i64>) -> Response {
-    match legacy_country_store::delete_country(country_id).await {
-        Ok(_) => (StatusCode::NO_CONTENT).into_response(),
-        Err(err) => {
-            println!("--> Error deleting country: {}", err);
-            (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(json!({ "message": "Error deleting country" })),
-            )
-                .into_response()
-        }
-    }
+async fn delete_country(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
+    Path(country_id): Path<i64>,
+) -> StatusCode {
+    mc.country_store
+        .delete_country(&ctx, country_id)
+        .await
+        .unwrap();
+
+    StatusCode::NO_CONTENT
 }
 
 pub fn country_router(mc: ModelController) -> Router {

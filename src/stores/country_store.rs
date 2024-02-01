@@ -43,7 +43,7 @@ impl BaseStore<CountrySelect, CountryInsert, CountryUpdate> for CountryStore {
         Ok(country)
     }
 
-    async fn insert(&self, ctx: &Ctx, item: CountryInsert) -> Result<(), sqlx::Error> {
+    async fn insert(&self, _ctx: &Ctx, item: CountryInsert) -> Result<(), sqlx::Error> {
         sqlx::query(
             "
             INSERT INTO countries (name, continent)
@@ -60,7 +60,7 @@ impl BaseStore<CountrySelect, CountryInsert, CountryUpdate> for CountryStore {
         Ok(())
     }
 
-    async fn update(&self, ctx: &Ctx, id: i64, item: CountryUpdate) -> Result<(), sqlx::Error> {
+    async fn update(&self, _ctx: &Ctx, id: i64, item: CountryUpdate) -> Result<(), sqlx::Error> {
         sqlx::query(
             "
             UPDATE countries
@@ -85,7 +85,7 @@ impl BaseStore<CountrySelect, CountryInsert, CountryUpdate> for CountryStore {
 }
 
 impl CountryStore {
-    pub async fn delete_country(&self, country_id: i64) -> Result<(), Error> {
+    pub async fn delete_country(&self, _ctx: &Ctx, country_id: i64) -> Result<(), Error> {
         sqlx::query(
             "
             DELETE FROM countries
