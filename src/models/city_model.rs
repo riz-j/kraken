@@ -1,6 +1,6 @@
 use crate::{
     schemas::city_schema::{CityExtendedSchema, CitySummarizedSchema},
-    stores::country_store,
+    stores::legacy_country_store,
 };
 use serde::Serialize;
 use sqlx::Error;
@@ -26,7 +26,7 @@ pub struct CityInsert {
 
 impl CitySelect {
     pub async fn get_country(&self) -> Result<CountrySelect, Error> {
-        country_store::select_country(self.country_id.unwrap()).await
+        legacy_country_store::select_country(self.country_id.unwrap()).await
     }
 
     pub fn into_summarized_schema(&self) -> CitySummarizedSchema {

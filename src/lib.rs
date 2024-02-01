@@ -7,7 +7,7 @@ pub mod models {
 pub mod stores {
     pub mod auth_store;
     pub mod city_store;
-    pub mod country_store;
+    pub mod legacy_country_store;
     pub mod user_store;
 }
 pub mod routers {

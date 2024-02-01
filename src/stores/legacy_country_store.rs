@@ -41,19 +41,6 @@ pub async fn insert_country(country: &CountryInsert) -> Result<(), Error> {
     Ok(())
 }
 
-pub async fn list_countries() -> Result<Vec<CountrySelect>, Error> {
-    let countries = sqlx::query_as::<_, CountrySelect>(
-        "
-        SELECT *
-        FROM countries;
-        ",
-    )
-    .fetch_all(db::POOL.get().unwrap())
-    .await?;
-
-    Ok(countries)
-}
-
 pub async fn select_country(country_id: i64) -> Result<CountrySelect, Error> {
     let country = sqlx::query_as::<_, CountrySelect>(
         "

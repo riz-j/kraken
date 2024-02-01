@@ -3,7 +3,7 @@ use crate::{
     mc::ModelController,
     models::country_model::{CountryInsert, CountryUpdate},
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
-    stores::country_store,
+    stores::legacy_country_store,
 };
 use axum::{
     extract::{Path, State},
@@ -17,7 +17,9 @@ use serde_json::json;
 async fn get_country_by_id(ctx: Ctx, Path(country_id): Path<i64>) -> Json<CountryExtendedSchema> {
     println!("User ID is: {:?}", ctx.get_user().await.id);
 
-    let country = country_store::select_country(country_id).await.unwrap();
+    let country = legacy_country_store::select_country(country_id)
+        .await
+        .unwrap();
 
     Json(country.into_extended_schema().await)
 }
@@ -39,7 +41,7 @@ async fn list_countries(
 }
 
 async fn create_country(Json(payload): Json<CountryInsert>) -> Result<StatusCode, Response> {
-    match country_store::insert_country(&payload).await {
+    match legacy_country_store::insert_country(&payload).await {
         Ok(_) => Ok(StatusCode::OK),
         Err(err) => {
             println!("--> Error creating country: {}", err);
@@ -56,7 +58,7 @@ async fn update_country(
     Path(country_id): Path<i64>,
     Json(payload): Json<CountryUpdate>,
 ) -> StatusCode {
-    country_store::update_country(country_id, &payload)
+    legacy_country_store::update_country(country_id, &payload)
         .await
         .unwrap();
 
@@ -64,7 +66,7 @@ async fn update_country(
 }
 
 async fn delete_country(Path(country_id): Path<i64>) -> Response {
-    match country_store::delete_country(country_id).await {
+    match legacy_country_store::delete_country(country_id).await {
         Ok(_) => (StatusCode::NO_CONTENT).into_response(),
         Err(err) => {
             println!("--> Error deleting country: {}", err);

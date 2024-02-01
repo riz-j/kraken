@@ -1,4 +1,4 @@
-use crate::stores::country_store::CountryStore;
+use crate::stores::legacy_country_store::CountryStore;
 use axum::extract::FromRef;
 
 #[derive(Clone, FromRef)]

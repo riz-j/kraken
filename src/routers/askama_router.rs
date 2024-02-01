@@ -4,7 +4,7 @@ use crate::{
         city_schema::CitySummarizedSchema,
         country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
     },
-    stores::{city_store, country_store},
+    stores::{city_store, legacy_country_store},
 };
 use askama::Template;
 use axum::{extract::Path, response::Html, routing::get, Router};
@@ -43,7 +43,9 @@ struct CountryTemplate {
 async fn render_country_page(ctx: Ctx, Path(country_id): Path<i64>) -> Html<String> {
     println!("\n---> This is called from the Askama Router\n{:?}", ctx);
 
-    let country = country_store::select_country(country_id).await.unwrap();
+    let country = legacy_country_store::select_country(country_id)
+        .await
+        .unwrap();
     let country_extended = country.into_extended_schema().await;
 
     let country_template = CountryTemplate {
