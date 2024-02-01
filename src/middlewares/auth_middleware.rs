@@ -14,7 +14,16 @@ pub async fn require_auth<B>(
     next: Next<B>,
 ) -> Response<BoxBody> {
     if ctx.is_err() {
-        return (StatusCode::UNAUTHORIZED, "Invalid Auth").into_response();
+        let response = axum::response::Response::builder()
+            .status(StatusCode::UNAUTHORIZED)
+            .header(
+                "Set-Cookie",
+                "KRAKEN_AUTH=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT",
+            )
+            .body(axum::body::Body::empty())
+            .unwrap();
+
+        return response.into_response();
     }
 
     next.run(req).await
