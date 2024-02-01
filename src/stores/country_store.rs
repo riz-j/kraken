@@ -2,6 +2,28 @@ use crate::db;
 use crate::models::country_model::{CountryInsert, CountrySelect, CountryUpdate};
 use sqlx::Error;
 
+#[derive(Clone)]
+pub struct CountryStore;
+
+impl CountryStore {
+    pub fn new() -> Self {
+        Self
+    }
+
+    pub async fn list_countries(&self) -> Result<Vec<CountrySelect>, Error> {
+        let countries = sqlx::query_as::<_, CountrySelect>(
+            "
+            SELECT *
+            FROM countries;
+            ",
+        )
+        .fetch_all(db::POOL.get().unwrap())
+        .await?;
+
+        Ok(countries)
+    }
+}
+
 pub async fn insert_country(country: &CountryInsert) -> Result<(), Error> {
     sqlx::query(
         "

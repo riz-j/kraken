@@ -1,5 +1,6 @@
 use axum::routing::get_service;
 use axum::Router;
+use kraken::mc::ModelController;
 use kraken::routers::askama_router::askama_router;
 use kraken::routers::auth_router::auth_router;
 use kraken::routers::spa_router;
@@ -16,8 +17,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenvy::dotenv()?;
     kraken::db::init_pool().await;
 
+    let mc = ModelController::new();
+
     let app = Router::new()
-        .nest("/api", kraken::api::router())
+        .nest("/api", kraken::api::router(mc))
         .merge(askama_router())
         .layer(CorsLayer::permissive())
         .merge(auth_router())

@@ -1,11 +1,12 @@
 use crate::{
     ctx::Ctx,
+    mc::ModelController,
     models::country_model::{CountryInsert, CountryUpdate},
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
     stores::country_store,
 };
 use axum::{
-    extract::Path,
+    extract::{Path, State},
     http::StatusCode,
     response::{IntoResponse, Response},
     routing::get,
@@ -22,29 +23,19 @@ async fn get_country_by_id(ctx: Ctx, Path(country_id): Path<i64>) -> Json<Countr
 }
 
 async fn list_countries(
+    State(mc): State<ModelController>,
     ctx: Ctx,
 ) -> Result<(StatusCode, Json<Vec<CountrySummarizedSchema>>), Response> {
     let user = ctx.get_user().await;
-
     println!("\n---> This is called from the Country Router\n{:?}", user);
 
-    match country_store::list_countries().await {
-        Ok(countries) => {
-            let countries_schema = countries
-                .iter()
-                .map(|country| country.into_summarized_schema())
-                .collect();
-            Ok((StatusCode::OK, Json(countries_schema)))
-        }
-        Err(err) => {
-            println!("--> Error listing countries: {}", err);
-            Err((
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(json!({ "message": "Error listing countries" })),
-            )
-                .into_response())
-        }
-    }
+    let countries = mc.country_store.list_countries().await.unwrap();
+    let countries_summ = countries
+        .iter()
+        .map(|country| country.into_summarized_schema())
+        .collect();
+
+    Ok((StatusCode::OK, Json(countries_summ)))
 }
 
 async fn create_country(Json(payload): Json<CountryInsert>) -> Result<StatusCode, Response> {
@@ -86,7 +77,7 @@ async fn delete_country(Path(country_id): Path<i64>) -> Response {
     }
 }
 
-pub fn country_router() -> Router {
+pub fn country_router(mc: ModelController) -> Router {
     Router::new()
         .route("/countries", get(list_countries).post(create_country))
         .route(
@@ -95,4 +86,5 @@ pub fn country_router() -> Router {
                 .patch(update_country)
                 .delete(delete_country),
         )
+        .with_state(mc)
 }
