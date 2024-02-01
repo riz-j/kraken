@@ -8,6 +8,6 @@ use axum::Router;
 pub fn router(mc: ModelController) -> Router {
     Router::new()
         .merge(country_router(mc.clone()))
-        .merge(city_router())
+        .merge(city_router(mc.clone()))
         .layer(axum::middleware::from_fn(require_auth))
 }
