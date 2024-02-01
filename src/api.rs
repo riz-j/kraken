@@ -9,5 +9,4 @@ pub fn router() -> Router {
         .merge(country_router())
         .merge(city_router())
         .layer(axum::middleware::from_fn(require_auth))
-    // .layer(axum::middleware::from_fn(print_country_id))
 }
