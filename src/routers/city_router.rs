@@ -23,6 +23,6 @@ async fn list_cities() -> Json<Vec<CitySummarizedSchema>> {
 
 pub fn city_router() -> Router {
     Router::new()
-        .route("/api/cities/:city_id", get(get_city_by_id))
-        .route("/api/cities", get(list_cities))
+        .route("/cities", get(list_cities))
+        .route("/cities/:city_id", get(get_city_by_id))
 }

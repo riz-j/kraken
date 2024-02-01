@@ -1,10 +1,7 @@
 use axum::routing::get_service;
 use axum::Router;
-use kraken::middlewares::auth_middleware::{print_country_id, require_auth};
 use kraken::routers::askama_router::askama_router;
 use kraken::routers::auth_router::auth_router;
-use kraken::routers::city_router::city_router;
-use kraken::routers::country_router::country_router;
 use kraken::routers::spa_router;
 use std::error::Error;
 use tower_http::cors::CorsLayer;
@@ -20,12 +17,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     kraken::db::init_pool().await;
 
     let app = Router::new()
-        .merge(country_router())
-        .merge(city_router())
-        .layer(axum::middleware::from_fn(require_auth))
+        .nest("/api", kraken::api::router())
         .merge(askama_router())
         .layer(CorsLayer::permissive())
-        .layer(axum::middleware::from_fn(print_country_id))
         .merge(auth_router())
         .merge(spa_router::office_router())
         .fallback_service(static_router());

@@ -30,5 +30,6 @@ pub mod services {
 pub mod macros {
     pub mod auth_macro;
 }
+pub mod api;
 pub mod ctx;
 pub mod db;

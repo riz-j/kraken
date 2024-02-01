@@ -98,9 +98,9 @@ async fn delete_country(Path(country_id): Path<i64>) -> Response {
 
 pub fn country_router() -> Router {
     Router::new()
-        .route("/api/countries", get(list_countries).post(create_country))
+        .route("/countries", get(list_countries).post(create_country))
         .route(
-            "/api/countries/:country_id",
+            "/countries/:country_id",
             get(get_country_by_id)
                 .patch(update_country)
                 .delete(delete_country),
