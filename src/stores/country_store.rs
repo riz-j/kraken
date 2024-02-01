@@ -91,9 +91,9 @@ impl BaseStore<CountrySelect> for CountryStore {
     async fn get(&self, _ctx: &Ctx, id: i64) -> Result<CountrySelect, sqlx::Error> {
         let country = sqlx::query_as::<_, CountrySelect>(
             "
-        SELECT *
-        FROM countries WHERE id = $1
-        ",
+            SELECT *
+            FROM countries WHERE id = $1
+            ",
         )
         .bind(id)
         .fetch_one(db::POOL.get().unwrap())
