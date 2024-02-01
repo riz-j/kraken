@@ -1,4 +1,5 @@
 use crate::{
+    ctx::Ctx,
     schemas::{
         city_schema::CitySummarizedSchema,
         country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
@@ -39,7 +40,9 @@ struct CountryTemplate {
     country: CountryExtendedSchema,
 }
 
-async fn render_country_page(Path(country_id): Path<i64>) -> Html<String> {
+async fn render_country_page(ctx: Ctx, Path(country_id): Path<i64>) -> Html<String> {
+    println!("\n---> This is called from the Askama Router\n{:?}", ctx);
+
     let country = country_store::select_country(country_id).await.unwrap();
     let country_extended = country.into_extended_schema().await;
 

@@ -1,4 +1,5 @@
 use crate::{
+    ctx::Ctx,
     get_user_model,
     models::{
         auth_model::Claims,
@@ -30,7 +31,13 @@ async fn get_country_by_id(
     Json(country.into_extended_schema().await)
 }
 
-async fn list_countries() -> Result<(StatusCode, Json<Vec<CountrySummarizedSchema>>), Response> {
+async fn list_countries(
+    ctx: Ctx,
+) -> Result<(StatusCode, Json<Vec<CountrySummarizedSchema>>), Response> {
+    let user = ctx.get_user().await;
+
+    println!("\n---> This is called from the Country Router\n{:?}", user);
+
     match country_store::list_countries().await {
         Ok(countries) => {
             let countries_schema = countries

@@ -1,4 +1,8 @@
-use crate::services::auth_service::cookie_extractor;
+use crate::{
+    models::{auth_model::Claims, user_model::UserSelect},
+    services::auth_service::cookie_extractor,
+    stores::user_store,
+};
 use async_trait::async_trait;
 use axum::{
     body::Body,
@@ -7,16 +11,30 @@ use axum::{
     response::IntoResponse,
     RequestPartsExt,
 };
+use dotenvy_macro::dotenv;
+use jsonwebtoken::{decode, DecodingKey, Validation};
 
 #[derive(Debug)]
 #[allow(dead_code)]
 pub struct Ctx {
     auth_cookie: String,
+    claims: Claims,
 }
 
 impl Ctx {
-    pub fn new(auth_cookie: String) -> Self {
-        Self { auth_cookie }
+    pub fn new(auth_cookie: String, claims: Claims) -> Self {
+        Self {
+            auth_cookie,
+            claims,
+        }
+    }
+
+    pub fn get_auth_cookie(&self) -> String {
+        self.auth_cookie.clone()
+    }
+
+    pub async fn get_user(&self) -> UserSelect {
+        user_store::get_user(&self.claims.user_id).await.unwrap()
     }
 }
 
@@ -29,12 +47,23 @@ impl<S: Send + Sync> FromRequestParts<S> for Ctx {
 
         let cookies = cookie_extractor(&headers);
 
-        let token_str = cookies.get("KRAKEN_AUTH").unwrap().clone();
+        let token_str = match cookies.get("KRAKEN_AUTH") {
+            Some(value) => value.clone(),
+            None => return Err(MyError),
+        };
 
-        Ok(Ctx::new(token_str))
+        let decoding_key = DecodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
+
+        let claims = match decode::<Claims>(&token_str, &decoding_key, &Validation::default()) {
+            Ok(value) => value.claims,
+            Err(_) => return Err(MyError),
+        };
+
+        Ok(Ctx::new(token_str, claims))
     }
 }
 
+#[derive(Debug)]
 pub struct MyError;
 
 impl IntoResponse for MyError {
