@@ -1,4 +1,4 @@
-use crate::ctx::{Ctx, MyError};
+use crate::ctx::{Ctx, CtxError};
 use axum::{
     body::BoxBody,
     extract::Path,
@@ -9,7 +9,7 @@ use axum::{
 use std::collections::HashMap;
 
 pub async fn require_auth<B>(
-    ctx: Result<Ctx, MyError>,
+    ctx: Result<Ctx, CtxError>,
     req: Request<B>,
     next: Next<B>,
 ) -> Response<BoxBody> {
