@@ -4,21 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="/cdn/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.7/dist/full.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div id="app">
-        <div class="flex flex-col p-5 gap-5 w-1/2">
-            <input v-model="email" class="input input-bordered" />
-            <input v-model="password" class="input input-bordered" />
-            <button @click="handleLogin()" class="btn">Log In</button>
-            <p>Don't have an account?
-                <a href="/_/signup" class="link">Sign up here</a>.
-            </p>
-        </div>
+        <form onsubmit="handleLogin(event)" class="flex flex-col p-5 gap-5 w-1/2">
+            <input type="text" id="email" name="email" class="input input-bordered" />
+            <input type="password" id="password" name="password" class="input input-bordered" />
+            <input type="submit" class="btn" />
+        </form>
+        <script>
+        function handleLogin(event) {
+            event.preventDefault();
+
+            fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value
+                })
+                }).then(res => {
+                    if (res.ok) {
+                        window.location.href = "/api/countries";
+                    }
+            });                
+        }
+        </script>
     </div>
-    <script src="index.js"></script>
 </body>
 </html>
