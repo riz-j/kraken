@@ -1,10 +1,9 @@
+use super::base::BaseStore;
 use crate::ctx::Ctx;
 use crate::db;
 use crate::models::country_model::{CountryInsert, CountrySelect, CountryUpdate};
 use async_trait::async_trait;
 use sqlx::Error;
-
-use super::base::BaseStore;
 
 #[derive(Clone)]
 pub struct CountryStore;
