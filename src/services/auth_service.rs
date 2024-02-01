@@ -1,14 +1,6 @@
-use crate::models::user_model::UserId;
-use axum::{
-    body::Body,
-    http::{header, HeaderMap, Request},
-};
+use axum::http::{header, HeaderMap};
 use std::collections::HashMap;
 use tower_cookies::Cookie;
-
-pub fn get_user_id(req: &Request<Body>) -> Option<i64> {
-    req.extensions().get::<UserId>().map(|user_id| user_id.id)
-}
 
 pub fn cookie_extractor(headers: &HeaderMap) -> HashMap<String, String> {
     let mut cookies_map = HashMap::new();
