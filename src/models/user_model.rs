@@ -23,3 +23,12 @@ pub struct UserInsert {
     pub first_name: String,
     pub last_name: String,
 }
+
+#[derive(Debug, Serialize, TS)]
+#[ts(export)]
+pub struct UserUpdate {
+    pub email: Option<String>,
+    pub password: Option<String>,
+    pub first_name: Option<String>,
+    pub last_name: Option<String>,
+}

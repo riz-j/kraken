@@ -3,7 +3,7 @@ use crate::{
         auth_model::{Claims, LoginRequest},
         user_model::UserInsert,
     },
-    stores::{auth_store, user_store},
+    stores::{auth_store, user_store::UserStore},
 };
 use axum::{
     http::StatusCode,
@@ -52,12 +52,13 @@ async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
 }
 
 async fn signup(Json(payload): Json<UserInsert>) -> impl IntoResponse {
-    let user_id_model = user_store::insert_user(&payload).await.unwrap();
+    let user_store = UserStore::new();
+    let user_id = user_store.insert(payload).await.unwrap();
 
     let encoding_key = EncodingKey::from_secret(dotenv!("JWT_SECRET").as_ref());
     let timestamp_now = chrono::Utc::now().timestamp() as usize;
     let claims = Claims {
-        user_id: user_id_model.id,
+        user_id,
         iat: timestamp_now,
         exp: timestamp_now + (30 * 60),
     };
@@ -75,7 +76,7 @@ async fn signup(Json(payload): Json<UserInsert>) -> impl IntoResponse {
         .header("Set-Cookie", cookie.to_string())
         .body(format!(
             "Welcome to Kraken! Cookies have been set! Your user id is: {}",
-            user_id_model.id
+            user_id
         ))
         .unwrap();
 
@@ -85,5 +86,5 @@ async fn signup(Json(payload): Json<UserInsert>) -> impl IntoResponse {
 pub fn auth_router() -> Router {
     Router::new()
         .route("/api/auth/login", post(login))
-        .route("/api/auth/signup", post(signup))
+        .route("/auth/signup", post(signup))
 }

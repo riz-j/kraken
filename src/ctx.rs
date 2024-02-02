@@ -1,7 +1,7 @@
 use crate::{
+    mc::ModelController,
     models::{auth_model::Claims, user_model::UserSelect},
     services::auth_service::cookie_extractor,
-    stores::user_store,
 };
 use async_trait::async_trait;
 use axum::{
@@ -34,7 +34,11 @@ impl Ctx {
     }
 
     pub async fn get_user(&self) -> UserSelect {
-        user_store::get_user(&self.claims.user_id).await.unwrap()
+        let mc = ModelController::new();
+        mc.user_store
+            .select(&self, self.claims.user_id)
+            .await
+            .unwrap()
     }
 }
 

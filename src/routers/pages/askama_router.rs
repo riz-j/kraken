@@ -55,7 +55,10 @@ async fn render_country_page(
     ctx: Ctx,
     Path(country_id): Path<u32>,
 ) -> Html<String> {
-    println!("\n---> This is called from the Askama Router\n{:?}", ctx);
+    println!(
+        "\n---> This is called from the Askama Router\n{:?}",
+        ctx.get_user().await
+    );
 
     let country = mc.country_store.select(&ctx, country_id).await.unwrap();
     let country_extended = country.into_extended_schema(mc, &ctx).await;

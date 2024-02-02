@@ -1,52 +1,84 @@
 use crate::{
+    ctx::Ctx,
     db,
-    models::user_model::{UserId, UserInsert, UserSelect},
+    models::user_model::{UserInsert, UserSelect, UserUpdate},
 };
 
-pub async fn insert_user(user: &UserInsert) -> Result<UserId, sqlx::Error> {
-    let pool = db::POOL.get().unwrap();
-    let mut tx = pool.begin().await?;
+#[derive(Clone)]
+pub struct UserStore;
 
-    sqlx::query(
-        "
-        INSERT INTO users (email, password, first_name, last_name)
-        VALUES ($1, $2, $3, $4);
-    ",
-    )
-    .bind(user.email.to_string())
-    .bind(user.password.to_string())
-    .bind(user.first_name.to_string())
-    .bind(user.last_name.to_string())
-    .execute(&mut tx)
-    .await?;
-
-    let user_id = sqlx::query_as::<_, UserId>(
-        "
-        SELECT last_insert_rowid() as id;
-    ",
-    )
-    .fetch_one(&mut tx)
-    .await?;
-
-    tx.commit().await?;
-
-    println!("User with ID of: {}, has been inserted", user_id.id);
-
-    Ok(user_id)
+impl UserStore {
+    pub fn new() -> Self {
+        Self
+    }
 }
 
-pub async fn get_user(user_id: &u32) -> Result<UserSelect, sqlx::Error> {
-    let user = sqlx::query_as::<_, UserSelect>(
-        "
-        SELECT * 
-        FROM users
-        WHERE 
-            users.id = $1;
-    ",
-    )
-    .bind(user_id)
-    .fetch_one(db::POOL.get().unwrap())
-    .await?;
+impl UserStore {
+    pub async fn list(&self, _ctx: &Ctx) -> Result<Vec<UserSelect>, sqlx::Error> {
+        let users = sqlx::query_as::<_, UserSelect>(
+            "
+            SELECT * FROM users
+            ",
+        )
+        .fetch_all(db::POOL.get().unwrap())
+        .await?;
 
-    Ok(user)
+        Ok(users)
+    }
+
+    pub async fn select(&self, _ctx: &Ctx, id: u32) -> Result<UserSelect, sqlx::Error> {
+        let user = sqlx::query_as::<_, UserSelect>(
+            "
+            SELECT * 
+            FROM users
+            WHERE 
+                users.id = $1;
+            ",
+        )
+        .bind(id)
+        .fetch_one(db::POOL.get().unwrap())
+        .await?;
+
+        Ok(user)
+    }
+
+    pub async fn insert(&self, item: UserInsert) -> Result<u32, sqlx::Error> {
+        let result = sqlx::query(
+            "
+            INSERT INTO users (email, password, first_name, last_name)
+            VALUES ($1, $2, $3, $4);
+        ",
+        )
+        .bind(item.email.to_string())
+        .bind(item.password.to_string())
+        .bind(item.first_name.to_string())
+        .bind(item.last_name.to_string())
+        .execute(db::POOL.get().unwrap())
+        .await?;
+
+        Ok(result.last_insert_rowid() as u32)
+    }
+
+    pub async fn update(&self, _ctx: &Ctx, id: u32, item: UserUpdate) -> Result<(), sqlx::Error> {
+        sqlx::query(
+            "
+            UPDATE users
+            SET 
+                email = COALESCE($1, email),
+                password = COALESCE($2, password),
+                first_name = COALESCE($3, first_name),
+                last_name = COALESCE($4, last_name)
+            WHERE id = $5;
+            ",
+        )
+        .bind(item.email)
+        .bind(item.password)
+        .bind(item.first_name)
+        .bind(item.last_name)
+        .bind(id)
+        .execute(db::POOL.get().unwrap())
+        .await?;
+
+        Ok(())
+    }
 }
