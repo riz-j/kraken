@@ -1,18 +1,30 @@
 use crate::{
+    ctx::Ctx,
     mc::ModelController,
     schemas::city_schema::{CityExtendedSchema, CitySummarizedSchema},
-    stores::city_store,
+    stores::base::BaseStore,
 };
-use axum::{extract::Path, routing::get, Json, Router};
+use axum::{
+    extract::{Path, State},
+    routing::get,
+    Json, Router,
+};
 
-async fn get_city_by_id(Path(city_id): Path<u32>) -> Json<CityExtendedSchema> {
-    let city = city_store::select_city(city_id).await.unwrap();
+async fn get_city_by_id(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
+    Path(city_id): Path<u32>,
+) -> Json<CityExtendedSchema> {
+    let city = mc.city_store.select(&ctx, city_id).await.unwrap();
 
     Json(city.into_extended_schema().await)
 }
 
-async fn list_cities() -> Json<Vec<CitySummarizedSchema>> {
-    let cities = city_store::list_cities().await.unwrap();
+async fn list_cities(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
+) -> Json<Vec<CitySummarizedSchema>> {
+    let cities = mc.city_store.list(&ctx).await.unwrap();
     let cities_summarized = cities
         .iter()
         .map(|city| city.into_summarized_schema())

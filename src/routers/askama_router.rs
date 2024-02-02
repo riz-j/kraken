@@ -1,13 +1,19 @@
 use crate::{
     ctx::Ctx,
+    mc::ModelController,
     schemas::{
         city_schema::CitySummarizedSchema,
         country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
     },
-    stores::{city_store, legacy_country_store},
+    stores::base::BaseStore,
 };
 use askama::Template;
-use axum::{extract::Path, response::Html, routing::get, Router};
+use axum::{
+    extract::{Path, State},
+    response::Html,
+    routing::get,
+    Router,
+};
 
 #[derive(Template)]
 #[template(path = "city.template.html")]
@@ -17,8 +23,12 @@ struct CityTemplate {
     country: CountrySummarizedSchema,
 }
 
-async fn render_city_page(Path(city_id): Path<u32>) -> Html<String> {
-    let city = city_store::select_city(city_id).await.unwrap();
+async fn render_city_page(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
+    Path(city_id): Path<u32>,
+) -> Html<String> {
+    let city = mc.city_store.select(&ctx, city_id).await.unwrap();
     let country = city.get_country().await.unwrap();
 
     let city_summarized = city.into_summarized_schema();
@@ -40,13 +50,15 @@ struct CountryTemplate {
     country: CountryExtendedSchema,
 }
 
-async fn render_country_page(ctx: Ctx, Path(country_id): Path<u32>) -> Html<String> {
+async fn render_country_page(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
+    Path(country_id): Path<u32>,
+) -> Html<String> {
     println!("\n---> This is called from the Askama Router\n{:?}", ctx);
 
-    let country = legacy_country_store::select_country(country_id)
-        .await
-        .unwrap();
-    let country_extended = country.into_extended_schema().await;
+    let country = mc.country_store.select(&ctx, country_id).await.unwrap();
+    let country_extended = country.into_extended_schema(mc, ctx).await;
 
     let country_template = CountryTemplate {
         country: country_extended,
@@ -56,8 +68,9 @@ async fn render_country_page(ctx: Ctx, Path(country_id): Path<u32>) -> Html<Stri
     Html(template_string)
 }
 
-pub fn askama_router() -> Router {
+pub fn askama_router(mc: ModelController) -> Router {
     Router::new()
         .route("/pages/cities/:city_id", get(render_city_page))
         .route("/pages/countries/:country_id", get(render_country_page))
+        .with_state(mc)
 }

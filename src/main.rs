@@ -20,8 +20,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let mc = ModelController::new();
 
     let app = Router::new()
-        .nest("/api", kraken::api::router(mc))
-        .merge(askama_router())
+        .nest("/api", kraken::api::router(mc.clone()))
+        .merge(askama_router(mc.clone()))
         .layer(CorsLayer::permissive())
         .merge(auth_router())
         .merge(spa_router::office_router())

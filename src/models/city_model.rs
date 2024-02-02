@@ -2,7 +2,7 @@ use crate::{
     schemas::city_schema::{CityExtendedSchema, CitySummarizedSchema},
     stores::legacy_country_store,
 };
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sqlx::Error;
 use ts_rs::TS;
 
@@ -21,6 +21,14 @@ pub struct CitySelect {
 #[allow(dead_code)]
 pub struct CityInsert {
     pub name: String,
+    pub country_id: Option<u32>,
+}
+
+#[derive(Deserialize, TS)]
+#[ts(export)]
+#[allow(dead_code)]
+pub struct CityUpdate {
+    pub name: Option<String>,
     pub country_id: Option<u32>,
 }
 

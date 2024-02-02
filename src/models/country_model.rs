@@ -1,7 +1,8 @@
 use super::city_model::CitySelect;
 use crate::{
+    ctx::Ctx,
+    mc::ModelController,
     schemas::country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
-    stores::city_store,
 };
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
@@ -32,8 +33,12 @@ pub struct CountryUpdate {
 }
 
 impl CountrySelect {
-    pub async fn get_cities(&self) -> Vec<CitySelect> {
-        city_store::list_cities_by_country(self.id).await.unwrap()
+    pub async fn get_cities(
+        &self,
+        mc: ModelController,
+        ctx: Ctx,
+    ) -> Result<Vec<CitySelect>, sqlx::Error> {
+        mc.city_store.list_cities_by_country(&ctx, self.id).await
     }
 
     pub fn into_summarized_schema(&self) -> CountrySummarizedSchema {
@@ -45,8 +50,12 @@ impl CountrySelect {
         }
     }
 
-    pub async fn into_extended_schema(&self) -> CountryExtendedSchema {
-        let cities = self.get_cities().await;
+    pub async fn into_extended_schema(
+        &self,
+        mc: ModelController,
+        ctx: Ctx,
+    ) -> CountryExtendedSchema {
+        let cities = self.get_cities(mc, ctx).await.unwrap();
         let cities_summarized = cities
             .iter()
             .map(|city| city.into_summarized_schema())

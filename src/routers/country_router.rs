@@ -33,7 +33,7 @@ async fn get_country_by_id(
 ) -> Json<CountryExtendedSchema> {
     let country = mc.country_store.select(&ctx, country_id).await.unwrap();
 
-    Json(country.into_extended_schema().await)
+    Json(country.into_extended_schema(mc, ctx).await)
 }
 
 async fn create_country(
