@@ -29,7 +29,7 @@ async fn render_city_page(
     Path(city_id): Path<u32>,
 ) -> Html<String> {
     let city = mc.city_store.select(&ctx, city_id).await.unwrap();
-    let country = city.get_country().await.unwrap();
+    let country = city.get_country(mc, &ctx).await.unwrap();
 
     let city_summarized = city.into_summarized_schema();
     let country_summarized = country.into_summarized_schema();
@@ -58,7 +58,7 @@ async fn render_country_page(
     println!("\n---> This is called from the Askama Router\n{:?}", ctx);
 
     let country = mc.country_store.select(&ctx, country_id).await.unwrap();
-    let country_extended = country.into_extended_schema(mc, ctx).await;
+    let country_extended = country.into_extended_schema(mc, &ctx).await;
 
     let country_template = CountryTemplate {
         country: country_extended,

@@ -1,9 +1,10 @@
 use crate::{
+    ctx::Ctx,
+    mc::ModelController,
     schemas::city_schema::{CityExtendedSchema, CitySummarizedSchema},
-    stores::legacy_country_store,
+    stores::base::BaseStore,
 };
 use serde::{Deserialize, Serialize};
-use sqlx::Error;
 use ts_rs::TS;
 
 use super::country_model::CountrySelect;
@@ -33,8 +34,12 @@ pub struct CityUpdate {
 }
 
 impl CitySelect {
-    pub async fn get_country(&self) -> Result<CountrySelect, Error> {
-        legacy_country_store::select_country(self.country_id.unwrap()).await
+    pub async fn get_country(
+        &self,
+        mc: ModelController,
+        ctx: &Ctx,
+    ) -> Result<CountrySelect, sqlx::Error> {
+        mc.country_store.select(ctx, self.country_id.unwrap()).await
     }
 
     pub fn into_summarized_schema(&self) -> CitySummarizedSchema {
@@ -44,8 +49,8 @@ impl CitySelect {
         }
     }
 
-    pub async fn into_extended_schema(&self) -> CityExtendedSchema {
-        let country = self.get_country().await.unwrap();
+    pub async fn into_extended_schema(&self, mc: ModelController, ctx: &Ctx) -> CityExtendedSchema {
+        let country = self.get_country(mc, ctx).await.unwrap();
         let country_summarized_schema = country.into_summarized_schema();
 
         CityExtendedSchema {

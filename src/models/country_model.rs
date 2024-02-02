@@ -36,9 +36,9 @@ impl CountrySelect {
     pub async fn get_cities(
         &self,
         mc: ModelController,
-        ctx: Ctx,
+        ctx: &Ctx,
     ) -> Result<Vec<CitySelect>, sqlx::Error> {
-        mc.city_store.list_cities_by_country(&ctx, self.id).await
+        mc.city_store.list_cities_by_country(ctx, self.id).await
     }
 
     pub fn into_summarized_schema(&self) -> CountrySummarizedSchema {
@@ -53,7 +53,7 @@ impl CountrySelect {
     pub async fn into_extended_schema(
         &self,
         mc: ModelController,
-        ctx: Ctx,
+        ctx: &Ctx,
     ) -> CountryExtendedSchema {
         let cities = self.get_cities(mc, ctx).await.unwrap();
         let cities_summarized = cities

@@ -17,7 +17,7 @@ async fn get_city_by_id(
 ) -> Json<CityExtendedSchema> {
     let city = mc.city_store.select(&ctx, city_id).await.unwrap();
 
-    Json(city.into_extended_schema().await)
+    Json(city.into_extended_schema(mc, &ctx).await)
 }
 
 async fn list_cities(
