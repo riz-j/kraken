@@ -8,7 +8,7 @@ use axum::{
 };
 use std::collections::HashMap;
 
-pub async fn require_auth<B>(
+pub async fn require_ctx<B>(
     ctx: Result<Ctx, CtxError>,
     req: Request<B>,
     next: Next<B>,
