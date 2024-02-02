@@ -70,7 +70,7 @@ async fn render_country_page(
 
 pub fn askama_router(mc: ModelController) -> Router {
     Router::new()
-        .route("/pages/cities/:city_id", get(render_city_page))
-        .route("/pages/countries/:country_id", get(render_country_page))
+        .route("/cities/:city_id", get(render_city_page))
+        .route("/countries/:country_id", get(render_country_page))
         .with_state(mc)
 }
