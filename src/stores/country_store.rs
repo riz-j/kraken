@@ -43,8 +43,8 @@ impl BaseStore<CountrySelect, CountryInsert, CountryUpdate> for CountryStore {
         Ok(country)
     }
 
-    async fn insert(&self, _ctx: &Ctx, item: CountryInsert) -> Result<(), sqlx::Error> {
-        sqlx::query(
+    async fn insert(&self, _ctx: &Ctx, item: CountryInsert) -> Result<u32, sqlx::Error> {
+        let result = sqlx::query(
             "
             INSERT INTO countries (name, continent)
             VALUES ($1, $2);
@@ -55,9 +55,7 @@ impl BaseStore<CountrySelect, CountryInsert, CountryUpdate> for CountryStore {
         .execute(db::POOL.get().unwrap())
         .await?;
 
-        println!("Country '{}' has been inserted!", item.name.to_string());
-
-        Ok(())
+        Ok(result.last_insert_rowid() as u32)
     }
 
     async fn update(&self, _ctx: &Ctx, id: u32, item: CountryUpdate) -> Result<(), sqlx::Error> {
