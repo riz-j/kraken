@@ -1,7 +1,7 @@
 use crate::{
     mc::ModelController,
     middlewares::auth_middleware::require_ctx,
-    routers::{city_router::city_router, country_router::country_router},
+    routers::api::{city_router::city_router, country_router::country_router},
 };
 use axum::{middleware, Router};
 

@@ -1,6 +1,6 @@
 use crate::{
     mc::ModelController, middlewares::auth_middleware::require_ctx,
-    routers::askama_router::askama_router,
+    routers::pages::askama_router::askama_router,
 };
 use axum::{middleware, Router};
 

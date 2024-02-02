@@ -12,10 +12,14 @@ pub mod stores {
     pub mod user_store;
 }
 pub mod routers {
-    pub mod askama_router;
+    pub mod api {
+        pub mod city_router;
+        pub mod country_router;
+    }
+    pub mod pages {
+        pub mod askama_router;
+    }
     pub mod auth_router;
-    pub mod city_router;
-    pub mod country_router;
     pub mod spa_router;
 }
 pub mod schemas {
