@@ -35,7 +35,7 @@ pub async fn insert_user(user: &UserInsert) -> Result<UserId, sqlx::Error> {
     Ok(user_id)
 }
 
-pub async fn get_user(user_id: &i64) -> Result<UserSelect, sqlx::Error> {
+pub async fn get_user(user_id: &u32) -> Result<UserSelect, sqlx::Error> {
     let user = sqlx::query_as::<_, UserSelect>(
         "
         SELECT * 

@@ -41,7 +41,7 @@ pub async fn insert_country(country: &CountryInsert) -> Result<(), Error> {
     Ok(())
 }
 
-pub async fn select_country(country_id: i64) -> Result<CountrySelect, Error> {
+pub async fn select_country(country_id: u32) -> Result<CountrySelect, Error> {
     let country = sqlx::query_as::<_, CountrySelect>(
         "
         SELECT *
@@ -55,7 +55,7 @@ pub async fn select_country(country_id: i64) -> Result<CountrySelect, Error> {
     Ok(country)
 }
 
-pub async fn update_country(country_id: i64, update_country: &CountryUpdate) -> Result<(), Error> {
+pub async fn update_country(country_id: u32, update_country: &CountryUpdate) -> Result<(), Error> {
     sqlx::query(
         "
         UPDATE countries
@@ -78,7 +78,7 @@ pub async fn update_country(country_id: i64, update_country: &CountryUpdate) -> 
     Ok(())
 }
 
-pub async fn delete_country(country_id: i64) -> Result<(), Error> {
+pub async fn delete_country(country_id: u32) -> Result<(), Error> {
     sqlx::query(
         "
         DELETE FROM countries

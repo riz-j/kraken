@@ -17,7 +17,7 @@ struct CityTemplate {
     country: CountrySummarizedSchema,
 }
 
-async fn render_city_page(Path(city_id): Path<i64>) -> Html<String> {
+async fn render_city_page(Path(city_id): Path<u32>) -> Html<String> {
     let city = city_store::select_city(city_id).await.unwrap();
     let country = city.get_country().await.unwrap();
 
@@ -40,7 +40,7 @@ struct CountryTemplate {
     country: CountryExtendedSchema,
 }
 
-async fn render_country_page(ctx: Ctx, Path(country_id): Path<i64>) -> Html<String> {
+async fn render_country_page(ctx: Ctx, Path(country_id): Path<u32>) -> Html<String> {
     println!("\n---> This is called from the Askama Router\n{:?}", ctx);
 
     let country = legacy_country_store::select_country(country_id)

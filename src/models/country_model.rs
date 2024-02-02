@@ -8,7 +8,7 @@ use ts_rs::TS;
 
 #[derive(Serialize, Debug, sqlx::FromRow, TS)]
 pub struct CountrySelect {
-    pub id: i64,
+    pub id: u32,
     pub name: String,
     pub continent: Option<String>,
     pub is_archived: bool,

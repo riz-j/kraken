@@ -11,9 +11,9 @@ use super::country_model::CountrySelect;
 #[derive(Debug, Serialize, sqlx::FromRow)]
 #[allow(dead_code)]
 pub struct CitySelect {
-    pub id: i64,
+    pub id: u32,
     pub name: String,
-    pub country_id: Option<i64>,
+    pub country_id: Option<u32>,
 }
 
 #[derive(Debug, Serialize, sqlx::FromRow, TS)]
@@ -21,7 +21,7 @@ pub struct CitySelect {
 #[allow(dead_code)]
 pub struct CityInsert {
     pub name: String,
-    pub country_id: Option<i64>,
+    pub country_id: Option<u32>,
 }
 
 impl CitySelect {

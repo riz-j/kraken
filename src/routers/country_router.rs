@@ -29,7 +29,7 @@ async fn list_countries(
 async fn get_country_by_id(
     State(mc): State<ModelController>,
     ctx: Ctx,
-    Path(country_id): Path<i64>,
+    Path(country_id): Path<u32>,
 ) -> Json<CountryExtendedSchema> {
     let country = mc.country_store.select(&ctx, country_id).await.unwrap();
 
@@ -49,7 +49,7 @@ async fn create_country(
 async fn update_country(
     State(mc): State<ModelController>,
     ctx: Ctx,
-    Path(country_id): Path<i64>,
+    Path(country_id): Path<u32>,
     Json(payload): Json<CountryUpdate>,
 ) -> StatusCode {
     mc.country_store
@@ -63,7 +63,7 @@ async fn update_country(
 async fn delete_country(
     State(mc): State<ModelController>,
     ctx: Ctx,
-    Path(country_id): Path<i64>,
+    Path(country_id): Path<u32>,
 ) -> StatusCode {
     mc.country_store
         .delete_country(&ctx, country_id)

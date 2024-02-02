@@ -6,7 +6,7 @@ use super::city_schema::CitySummarizedSchema;
 #[derive(Debug, Serialize, TS)]
 #[ts(export)]
 pub struct CountrySummarizedSchema {
-    pub id: i64,
+    pub id: u32,
     pub name: String,
     pub continent: Option<String>,
     pub is_archived: bool,
@@ -15,7 +15,7 @@ pub struct CountrySummarizedSchema {
 #[derive(Debug, Serialize, TS)]
 #[ts(export)]
 pub struct CountryExtendedSchema {
-    pub id: i64,
+    pub id: u32,
     pub name: String,
     pub continent: Option<String>,
     pub cities: Vec<CitySummarizedSchema>,

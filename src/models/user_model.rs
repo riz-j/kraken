@@ -3,12 +3,12 @@ use ts_rs::TS;
 
 #[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct UserId {
-    pub id: i64,
+    pub id: u32,
 }
 
 #[derive(Serialize, Debug, sqlx::FromRow)]
 pub struct UserSelect {
-    pub id: i64,
+    pub id: u32,
     pub email: String,
     pub password: String,
     pub first_name: String,

@@ -5,7 +5,7 @@ use crate::{
 };
 use axum::{extract::Path, routing::get, Json, Router};
 
-async fn get_city_by_id(Path(city_id): Path<i64>) -> Json<CityExtendedSchema> {
+async fn get_city_by_id(Path(city_id): Path<u32>) -> Json<CityExtendedSchema> {
     let city = city_store::select_city(city_id).await.unwrap();
 
     Json(city.into_extended_schema().await)

@@ -19,7 +19,7 @@ pub async fn insert_city(insert_city: &CityInsert) -> Result<(), Error> {
     Ok(())
 }
 
-pub async fn select_city(city_id: i64) -> Result<CitySelect, Error> {
+pub async fn select_city(city_id: u32) -> Result<CitySelect, Error> {
     let city = sqlx::query_as::<_, CitySelect>(
         "
         SELECT id, name, country_id
@@ -46,7 +46,7 @@ pub async fn list_cities() -> Result<Vec<CitySelect>, Error> {
     Ok(cities)
 }
 
-pub async fn list_cities_by_country(country_id: i64) -> Result<Vec<CitySelect>, Error> {
+pub async fn list_cities_by_country(country_id: u32) -> Result<Vec<CitySelect>, Error> {
     let cities = sqlx::query_as::<_, CitySelect>(
         "
         SELECT *

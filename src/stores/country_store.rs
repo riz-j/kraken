@@ -29,7 +29,7 @@ impl BaseStore<CountrySelect, CountryInsert, CountryUpdate> for CountryStore {
         Ok(countries)
     }
 
-    async fn select(&self, _ctx: &Ctx, id: i64) -> Result<CountrySelect, sqlx::Error> {
+    async fn select(&self, _ctx: &Ctx, id: u32) -> Result<CountrySelect, sqlx::Error> {
         let country = sqlx::query_as::<_, CountrySelect>(
             "
             SELECT *
@@ -60,7 +60,7 @@ impl BaseStore<CountrySelect, CountryInsert, CountryUpdate> for CountryStore {
         Ok(())
     }
 
-    async fn update(&self, _ctx: &Ctx, id: i64, item: CountryUpdate) -> Result<(), sqlx::Error> {
+    async fn update(&self, _ctx: &Ctx, id: u32, item: CountryUpdate) -> Result<(), sqlx::Error> {
         sqlx::query(
             "
             UPDATE countries
@@ -85,7 +85,7 @@ impl BaseStore<CountrySelect, CountryInsert, CountryUpdate> for CountryStore {
 }
 
 impl CountryStore {
-    pub async fn delete_country(&self, _ctx: &Ctx, country_id: i64) -> Result<(), Error> {
+    pub async fn delete_country(&self, _ctx: &Ctx, country_id: u32) -> Result<(), Error> {
         sqlx::query(
             "
             DELETE FROM countries
