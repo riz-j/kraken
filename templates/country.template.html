@@ -3,15 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>United Kingdom Cities</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            margin-bottom: 10px;
+        }
+
+        .city-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .city-list li {
+            margin-bottom: 8px;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-city-form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the nation of {{ country.name }}</h1>
-    <h2>List of cities in {{ country.name }}:</h2>
-    <ol>
-    {% for city in country.cities %}
-        <li>{{ city.name }}</li>
-    {% endfor %}
-    </ol>
+    <header>
+        <h1>Welcome to {{ country.name }}</h1>
+        <h2>List of Cities</h2>
+    </header>
+
+    <main>
+        <ol id="cityList" class="city-list">
+            {% for city in country.cities %}
+            <li>{{ city.name }}</li>
+            {% endfor %}
+        </ol>
+
+        <form hx-post="/api/cities" class="add-city-form">
+            <label for="name">Add a new city:</label>
+            <input type="text" id="name" name="name" required />
+            <input type="hidden" id="country_id" name="country_id" value="{{ country.id }}" />
+            <button type="submit">Add City</button>
+        </form>
+    </main>
 </body>
 </html>

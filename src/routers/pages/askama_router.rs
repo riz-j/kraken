@@ -44,6 +44,27 @@ async fn render_city_page(
 }
 
 #[derive(Template)]
+#[template(path = "countries.template.html")]
+#[allow(dead_code)]
+struct CountriesTemplate {
+    countries: Vec<CountrySummarizedSchema>,
+}
+
+async fn render_countries_page(State(mc): State<ModelController>, ctx: Ctx) -> Html<String> {
+    let countries = mc.country_store.list(&ctx).await.unwrap();
+    let countries_summ: Vec<CountrySummarizedSchema> = countries
+        .iter()
+        .map(|country| country.into_summarized_schema())
+        .collect();
+
+    let countries_template = CountriesTemplate {
+        countries: countries_summ,
+    };
+
+    Html(countries_template.render().unwrap())
+}
+
+#[derive(Template)]
 #[template(path = "country.template.html")]
 #[allow(dead_code)]
 struct CountryTemplate {
@@ -69,6 +90,7 @@ async fn render_country_page(
 pub fn askama_router(mc: ModelController) -> Router {
     Router::new()
         .route("/cities/:city_id", get(render_city_page))
+        .route("/countries", get(render_countries_page))
         .route("/countries/:country_id", get(render_country_page))
         .with_state(mc)
 }
