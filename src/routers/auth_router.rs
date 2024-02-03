@@ -38,7 +38,6 @@ async fn login(Json(payload): Json<LoginRequest>) -> impl IntoResponse {
 
     let mut cookie = Cookie::new("KRAKEN_AUTH", token);
     cookie.set_secure(true);
-    cookie.set_domain("localhost");
     cookie.set_path("/");
     cookie.set_http_only(true);
 
@@ -67,7 +66,6 @@ async fn signup(Json(payload): Json<UserInsert>) -> impl IntoResponse {
 
     let mut cookie = Cookie::new("KRAKEN_AUTH", token);
     cookie.set_secure(true);
-    cookie.set_domain("localhost");
     cookie.set_path("/");
     cookie.set_http_only(true);
 
