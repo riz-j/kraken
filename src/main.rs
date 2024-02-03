@@ -16,6 +16,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
     dotenvy::dotenv()?;
     kraken::db::init_pool().await;
 
+    tracing_subscriber::fmt()
+        .with_target(false)
+        .compact()
+        .init();
+
     let mc = ModelController::new();
 
     let app = Router::new()
