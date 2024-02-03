@@ -2,3 +2,4 @@
 db_main.db
 .env
 /migrations
+Cargo.lock
