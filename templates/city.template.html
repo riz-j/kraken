@@ -4,9 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/open-fonts@1.1.1/fonts/inter.min.css">
+    <link rel="stylesheet" href="/cdn/new.min.css" />
 </head>
 <body>
-    <h1>Welcome to the city of {{ city.name }}</h1>
-    <h2>The city of {{ city.name }} is located in the nation of {{ country.name }}</h2>
+    <main id="#main">
+        <h1>Web Application API Documentation</h1>
+        <p>This documentation provides a basic overview of the Web Application API, including how to perform API calls and understand the responses.</p>
+        <h2>Authentication</h2>
+        <p>To use the API, you must first authenticate using the <code>/authenticate</code> endpoint.</p>
+        <pre><code>POST /authenticate
+    Headers:
+        Content-Type: application/json
+
+    Body:
+    {
+        "username": "user",
+        "password": "password"
+    }</code></pre>
+        <p>Successful authentication returns a token that must be included in the header of all subsequent requests.</p>
+        <h2>Get User Details</h2>
+        <p>Retrieve details about a user with the <code>/users/{id}</code> endpoint.</p>
+        <pre><code>GET /users/1
+    Headers:
+        Authorization: Bearer {token}</code></pre>
+        <p>Response includes user ID, name, and email.</p>
+        <h2>Error Handling</h2>
+        <p>The API uses the following error codes:</p>
+        <ul>
+            <li><code>400</code> - Bad Request</li>
+            <li><code>401</code> - Unauthorized</li>
+            <li><code>404</code> - Not Found</li>
+            <li><code>500</code> - Internal Server Error</li>
+        </ul>
+        <h2>Rate Limiting</h2>
+        <p>API requests are limited to 1000 requests per hour. Exceeding this limit results in a <code>429 Too Many Requests</code> error.</p>
+    </main>
 </body>
 </html>
