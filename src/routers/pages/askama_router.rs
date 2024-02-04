@@ -10,9 +10,7 @@ use crate::{
 };
 use askama::Template;
 use axum::{
-    body::Body,
     extract::{Path, State},
-    http::StatusCode,
     response::Html,
     routing::{get, post},
     Form, Router,
