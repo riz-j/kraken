@@ -1,6 +1,7 @@
 use crate::{
     ctx::Ctx,
     mc::ModelController,
+    models::city_model::CityInsert,
     schemas::{
         city_schema::CitySummarizedSchema,
         country_schema::{CountryExtendedSchema, CountrySummarizedSchema},
@@ -9,10 +10,12 @@ use crate::{
 };
 use askama::Template;
 use axum::{
+    body::Body,
     extract::{Path, State},
+    http::StatusCode,
     response::Html,
-    routing::get,
-    Router,
+    routing::{get, post},
+    Form, Router,
 };
 
 #[derive(Template)]
@@ -87,10 +90,24 @@ async fn render_country_page(
     Html(template_string)
 }
 
+async fn create_city(
+    State(mc): State<ModelController>,
+    ctx: Ctx,
+    Path(country_id): Path<u32>,
+    Form(payload): Form<CityInsert>,
+) -> Html<String> {
+    mc.city_store.insert(&ctx, payload).await.unwrap();
+
+    let page = render_country_page(State(mc), ctx, Path(country_id)).await;
+
+    page
+}
+
 pub fn askama_router(mc: ModelController) -> Router {
     Router::new()
         .route("/cities/:city_id", get(render_city_page))
         .route("/countries", get(render_countries_page))
         .route("/countries/:country_id", get(render_country_page))
+        .route("/countries/:country_id", post(create_city))
         .with_state(mc)
 }

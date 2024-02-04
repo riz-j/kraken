@@ -17,7 +17,7 @@ pub struct CitySelect {
     pub country_id: Option<u32>,
 }
 
-#[derive(Debug, Deserialize, sqlx::FromRow, TS)]
+#[derive(Debug, Deserialize, Serialize, sqlx::FromRow, TS)]
 #[ts(export)]
 #[allow(dead_code)]
 pub struct CityInsert {
