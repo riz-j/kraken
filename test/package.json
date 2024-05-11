@@ -1,14 +1,10 @@
 {
-  "name": "test",
-  "module": "index.ts",
+  "name": "kraken-test",
+  "module": "index.test.js",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
   "dependencies": {
-    "uuid": "^9.0.1"
   }
 }

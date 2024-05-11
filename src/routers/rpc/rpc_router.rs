@@ -55,8 +55,9 @@ async fn rpc_handler(
     };
 
     let body_response = json!({
-      "id": id,
-      "result": result
+        "jsonrpc": "2.0",
+        "result": result,
+        "id": id,
     });
 
     Ok(Json(body_response))

@@ -1,8 +1,7 @@
 import { test, expect } from "bun:test";
-import { v4 as uuid } from "uuid";
 
 const RPC_ROUTE = "http://localhost:2900/json-rpc";
-const MOCK_ID = uuid();
+const MOCK_ID = Date.now();
 
 async function call_rpc(method, params, id = MOCK_ID) {
 	const response = await fetch(RPC_ROUTE, {
@@ -23,7 +22,7 @@ async function call_rpc(method, params, id = MOCK_ID) {
 } 
 
 test("add", async () => {
-	const { id, result, error } = await call_rpc(
+	const { result, error, id } = await call_rpc(
 		"add", 
 		{ a: 15, b: 25 },
 	);
@@ -34,7 +33,7 @@ test("add", async () => {
 });
 
 test("subtract", async () => {
-	const { id, result, error } = await call_rpc(
+	const { result, error, id } = await call_rpc(
 		"subtract", 
 		{ a: 15, b: 25 },
 	);
@@ -45,7 +44,7 @@ test("subtract", async () => {
 });
 
 test("multiply", async () => {
-	const { id, result, error } = await call_rpc(
+	const { result, error, id } = await call_rpc(
 		"multiply", 
 		{ a: 5, b: 9 },
 	);
@@ -56,7 +55,7 @@ test("multiply", async () => {
 })
 
 test("divide", async () => {
-	const { id, result, error } = await call_rpc(
+	const { result, error, id } = await call_rpc(
 		"divide", 
 		{ a: 27, b: 4 },
 	);
