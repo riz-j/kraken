@@ -5,9 +5,12 @@ use serde::Deserialize;
 use serde_json::{json, to_value, Value};
 use std::convert::Infallible;
 
+use super::country_city_rpc::get_city;
+use super::country_city_rpc::get_country;
+use super::country_city_rpc::list_cities;
+use super::country_city_rpc::list_countries;
 use super::math_rpc::add;
 use super::math_rpc::divide;
-use super::math_rpc::list_cities;
 use super::math_rpc::multiply;
 use super::math_rpc::subtract;
 
@@ -17,6 +20,9 @@ struct RpcRequest {
     method: String,
     params: Option<Value>,
 }
+
+#[derive(Deserialize)]
+pub struct EmptyParams {}
 
 macro_rules! invoke {
     ($func:ident, $mc:ident, $ctx:ident, $params:ident) => {{
@@ -41,7 +47,10 @@ async fn rpc_handler(
         "subtract" => invoke!(subtract, mc, ctx, params),
         "multiply" => invoke!(multiply, mc, ctx, params),
         "divide" => invoke!(divide, mc, ctx, params),
+        "list_countries" => invoke!(list_countries, mc, ctx, params),
         "list_cities" => invoke!(list_cities, mc, ctx, params),
+        "get_country" => invoke!(get_country, mc, ctx, params),
+        "get_city" => invoke!(get_city, mc, ctx, params),
         _ => to_value("Method Not Found").unwrap(),
     };
 

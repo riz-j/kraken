@@ -20,6 +20,7 @@ pub mod routers {
         pub mod askama_router;
     }
     pub mod rpc {
+        pub mod country_city_rpc;
         pub mod math_rpc;
         pub mod rpc_router;
     }

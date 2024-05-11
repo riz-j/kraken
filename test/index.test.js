@@ -9,7 +9,7 @@ async function call_rpc(method, params, id = MOCK_ID) {
 		method: "POST",
 		headers: { 
 			"Content-Type": "application/json",
-			"Cookie": "KRAKEN_AUTH=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3MTUzOTk2NzksImV4cCI6MTcxNTQwMTQ3OX0.goBczwn2AMAJi9OOXlhaAiAF1D9InotrwbP2q1jqL9s; Path=/; Secure; HttpOnly; Domain=localhost"
+			"Cookie": process.env.COOKIE,
 		},
 		body: JSON.stringify({
 			id: id,
