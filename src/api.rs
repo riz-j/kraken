@@ -15,6 +15,7 @@ pub fn router(mc: ModelController) -> Router {
     Router::new()
         .merge(country_router(mc.clone()))
         .merge(city_router(mc.clone()))
+        .merge(crate::routers::rpc::rpc_router::router(mc.clone()))
         .layer(middleware::from_fn(require_ctx))
         .layer(tracing_layer)
 }

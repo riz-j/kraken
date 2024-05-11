@@ -1,3 +1,4 @@
+use crate::ctx::Ctx;
 use crate::mc::ModelController;
 use axum::{extract::State, routing::post, Json, Router};
 use serde::Deserialize;
@@ -6,6 +7,7 @@ use std::convert::Infallible;
 
 use super::math_rpc::add;
 use super::math_rpc::divide;
+use super::math_rpc::list_cities;
 use super::math_rpc::multiply;
 use super::math_rpc::subtract;
 
@@ -17,16 +19,17 @@ struct RpcRequest {
 }
 
 macro_rules! invoke {
-    ($func:ident, $params:ident) => {{
+    ($func:ident, $mc:ident, $ctx:ident, $params:ident) => {{
         let fn_params = $params.unwrap();
         let the_params = serde_json::from_value(fn_params).unwrap();
-        let hasil = $func(the_params);
-        serde_json::to_value(hasil).unwrap()
+        let result = $func($mc, $ctx, the_params).await;
+        serde_json::to_value(result).unwrap()
     }};
 }
 
 async fn rpc_handler(
-    State(_mc): State<ModelController>,
+    State(mc): State<ModelController>,
+    ctx: Ctx,
     Json(rpc_req): Json<RpcRequest>,
 ) -> Result<Json<Value>, Infallible> {
     let id = rpc_req.id;
@@ -34,10 +37,11 @@ async fn rpc_handler(
     let params = rpc_req.params;
 
     let result: serde_json::Value = match method.as_str() {
-        "add" => invoke!(add, params),
-        "subtract" => invoke!(subtract, params),
-        "multiply" => invoke!(multiply, params),
-        "divide" => invoke!(divide, params),
+        "add" => invoke!(add, mc, ctx, params),
+        "subtract" => invoke!(subtract, mc, ctx, params),
+        "multiply" => invoke!(multiply, mc, ctx, params),
+        "divide" => invoke!(divide, mc, ctx, params),
+        "list_cities" => invoke!(list_cities, mc, ctx, params),
         _ => to_value("Method Not Found").unwrap(),
     };
 
@@ -50,5 +54,7 @@ async fn rpc_handler(
 }
 
 pub fn router(mc: ModelController) -> Router {
-    Router::new().route("/", post(rpc_handler)).with_state(mc)
+    Router::new()
+        .route("/json-rpc", post(rpc_handler))
+        .with_state(mc)
 }
