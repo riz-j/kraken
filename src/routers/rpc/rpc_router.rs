@@ -38,7 +38,7 @@ async fn rpc_handler(
         "subtract" => invoke!(subtract, params),
         "multiply" => invoke!(multiply, params),
         "divide" => invoke!(divide, params),
-        _ => to_value("nope!").unwrap(),
+        _ => to_value("Method Not Found").unwrap(),
     };
 
     let body_response = json!({
@@ -50,7 +50,5 @@ async fn rpc_handler(
 }
 
 pub fn router(mc: ModelController) -> Router {
-    Router::new()
-        .route("/handler", post(rpc_handler))
-        .with_state(mc)
+    Router::new().route("/", post(rpc_handler)).with_state(mc)
 }

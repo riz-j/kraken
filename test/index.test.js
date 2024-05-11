@@ -1,7 +1,7 @@
 import { test, expect } from "bun:test";
 import { v4 as uuid } from "uuid";
 
-const RPC_ROUTE = "http://localhost:2900/rpc/handler";
+const RPC_ROUTE = "http://localhost:2900/rpc";
 const MOCK_ID = uuid();
 
 async function call_rpc(method, params, id = MOCK_ID) {
@@ -55,10 +55,10 @@ test("multiply", async () => {
 test("divide", async () => {
 	const { id, result, error } = await call_rpc(
 		"divide", 
-		{ a: 180, b: 20 },
+		{ a: 27, b: 4 },
 	);
 	
-	expect(result).toBe(9);
+	expect(result).toBe(6.75);
 	expect(id).toBe(MOCK_ID);
 	expect(error).toBeUndefined();
 })
