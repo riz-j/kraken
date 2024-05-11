@@ -54,7 +54,5 @@ async fn rpc_handler(
 }
 
 pub fn router(mc: ModelController) -> Router {
-    Router::new()
-        .route("/json-rpc", post(rpc_handler))
-        .with_state(mc)
+    Router::new().route("/", post(rpc_handler)).with_state(mc)
 }

@@ -44,3 +44,4 @@ pub mod ctx;
 pub mod db;
 pub mod mc;
 pub mod pages;
+pub mod rpc;

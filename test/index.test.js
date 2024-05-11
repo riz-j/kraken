@@ -1,7 +1,7 @@
 import { test, expect } from "bun:test";
 import { v4 as uuid } from "uuid";
 
-const RPC_ROUTE = "http://localhost:2900/api/json-rpc";
+const RPC_ROUTE = "http://localhost:2900/json-rpc";
 const MOCK_ID = uuid();
 
 async function call_rpc(method, params, id = MOCK_ID) {
