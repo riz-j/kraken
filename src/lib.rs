@@ -20,6 +20,7 @@ pub mod routers {
         pub mod askama_router;
     }
     pub mod rpc {
+        pub mod math_rpc;
         pub mod rpc_router;
     }
     pub mod auth_router;

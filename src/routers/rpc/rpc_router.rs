@@ -1,19 +1,13 @@
-use std::convert::Infallible;
-
+use crate::mc::ModelController;
 use axum::{extract::State, routing::post, Json, Router};
 use serde::Deserialize;
 use serde_json::{json, to_value, Value};
+use std::convert::Infallible;
 
-use crate::mc::ModelController;
-
-macro_rules! invoke {
-    ($func:ident, $params:ident) => {{
-        let fn_params = $params.unwrap();
-        let the_params = serde_json::from_value(fn_params).unwrap();
-        let hasil = $func(the_params);
-        serde_json::to_value(hasil).unwrap()
-    }};
-}
+use super::math_rpc::add;
+use super::math_rpc::divide;
+use super::math_rpc::multiply;
+use super::math_rpc::subtract;
 
 #[derive(Deserialize)]
 struct RpcRequest {
@@ -22,22 +16,13 @@ struct RpcRequest {
     params: Option<Value>,
 }
 
-#[derive(Deserialize)]
-struct ParamsForAdd {
-    pub a: i16,
-    pub b: i16,
-}
-fn add(params: ParamsForAdd) -> i16 {
-    params.a + params.b
-}
-
-#[derive(Deserialize)]
-struct ParamsForSubtract {
-    pub a: i16,
-    pub b: i16,
-}
-fn subtract(params: ParamsForSubtract) -> i16 {
-    params.a - params.b
+macro_rules! invoke {
+    ($func:ident, $params:ident) => {{
+        let fn_params = $params.unwrap();
+        let the_params = serde_json::from_value(fn_params).unwrap();
+        let hasil = $func(the_params);
+        serde_json::to_value(hasil).unwrap()
+    }};
 }
 
 async fn rpc_handler(
@@ -51,6 +36,8 @@ async fn rpc_handler(
     let result: serde_json::Value = match method.as_str() {
         "add" => invoke!(add, params),
         "subtract" => invoke!(subtract, params),
+        "multiply" => invoke!(multiply, params),
+        "divide" => invoke!(divide, params),
         _ => to_value("nope!").unwrap(),
     };
 
