@@ -24,11 +24,12 @@ pub async fn list_cities(
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GetCityParams {
-    city_id: u32,
+    id: u32,
 }
 pub async fn get_city(mc: ModelController, ctx: Ctx, params: GetCityParams) -> CityExtendedSchema {
-    let city = mc.city_store.select(&ctx, params.city_id).await.unwrap();
+    let city = mc.city_store.select(&ctx, params.id).await.unwrap();
     let city_extended = city.into_extended_schema(mc, &ctx).await;
 
     city_extended
@@ -49,19 +50,16 @@ pub async fn list_countries(
 }
 
 #[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GetCountryParams {
-    country_id: u32,
+    id: u32,
 }
 pub async fn get_country(
     mc: ModelController,
     ctx: Ctx,
     params: GetCountryParams,
 ) -> CountryExtendedSchema {
-    let country = mc
-        .country_store
-        .select(&ctx, params.country_id)
-        .await
-        .unwrap();
+    let country = mc.country_store.select(&ctx, params.id).await.unwrap();
 
     let country_extended = country.into_extended_schema(mc, &ctx).await;
 

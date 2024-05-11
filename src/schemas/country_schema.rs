@@ -4,6 +4,7 @@ use ts_rs::TS;
 use super::city_schema::CitySummarizedSchema;
 
 #[derive(Debug, Serialize, TS)]
+#[serde(rename_all = "camelCase")]
 #[ts(export)]
 pub struct CountrySummarizedSchema {
     pub id: u32,
@@ -13,6 +14,7 @@ pub struct CountrySummarizedSchema {
 }
 
 #[derive(Debug, Serialize, TS)]
+#[serde(rename_all = "camelCase")]
 #[ts(export)]
 pub struct CountryExtendedSchema {
     pub id: u32,

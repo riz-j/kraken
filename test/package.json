@@ -6,5 +6,6 @@
     "@types/bun": "latest"
   },
   "dependencies": {
+    "ts-interface-builder": "^0.3.3"
   }
 }
