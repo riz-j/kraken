@@ -47,10 +47,10 @@ async fn rpc_handler(
         "subtract" => invoke!(subtract, mc, ctx, params),
         "multiply" => invoke!(multiply, mc, ctx, params),
         "divide" => invoke!(divide, mc, ctx, params),
-        "list_countries" => invoke!(list_countries, mc, ctx, params),
-        "list_cities" => invoke!(list_cities, mc, ctx, params),
-        "get_country" => invoke!(get_country, mc, ctx, params),
-        "get_city" => invoke!(get_city, mc, ctx, params),
+        "countries.list" => invoke!(list_countries, mc, ctx, params),
+        "countries.get" => invoke!(get_country, mc, ctx, params),
+        "cities.list" => invoke!(list_cities, mc, ctx, params),
+        "cities.get" => invoke!(get_city, mc, ctx, params),
         _ => to_value("Method Not Found").unwrap(),
     };
 
