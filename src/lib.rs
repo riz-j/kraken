@@ -19,6 +19,11 @@ pub mod routers {
     pub mod pages {
         pub mod askama_router;
     }
+    pub mod rpc {
+        pub mod country_city_rpc;
+        pub mod math_rpc;
+        pub mod rpc_router;
+    }
     pub mod auth_router;
     pub mod spa_router;
 }
@@ -40,3 +45,4 @@ pub mod ctx;
 pub mod db;
 pub mod mc;
 pub mod pages;
+pub mod rpc;

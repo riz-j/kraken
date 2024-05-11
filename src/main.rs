@@ -26,6 +26,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let app = Router::new()
         .nest("/api", kraken::api::router(mc.clone()))
         .nest("/pages", kraken::pages::router(mc.clone()))
+        .nest("/json-rpc", kraken::rpc::router(mc.clone()))
         .layer(CorsLayer::permissive())
         .merge(auth_router())
         .merge(spa_router::office_router())
