@@ -19,8 +19,10 @@ pub mod routers {
     pub mod pages {
         pub mod askama_router;
     }
+    pub mod rpc {
+        pub mod rpc_router;
+    }
     pub mod auth_router;
-    pub mod rpc_router;
     pub mod spa_router;
 }
 pub mod schemas {
