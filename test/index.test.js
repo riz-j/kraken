@@ -1,13 +1,16 @@
 import { test, expect } from "bun:test";
 import { v4 as uuid } from "uuid";
 
-const RPC_ROUTE = "http://localhost:2900/rpc";
+const RPC_ROUTE = "http://localhost:2900/api/json-rpc";
 const MOCK_ID = uuid();
 
 async function call_rpc(method, params, id = MOCK_ID) {
 	const response = await fetch(RPC_ROUTE, {
 		method: "POST",
-		headers: { "Content-Type": "application/json" },
+		headers: { 
+			"Content-Type": "application/json",
+			"Cookie": "KRAKEN_AUTH=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3MTUzOTk2NzksImV4cCI6MTcxNTQwMTQ3OX0.goBczwn2AMAJi9OOXlhaAiAF1D9InotrwbP2q1jqL9s; Path=/; Secure; HttpOnly; Domain=localhost"
+		},
 		body: JSON.stringify({
 			id: id,
 			method: method,
