@@ -2,9 +2,18 @@ use std::convert::Infallible;
 
 use axum::{extract::State, routing::post, Json, Router};
 use serde::Deserialize;
-use serde_json::{from_value, json, to_value, Value};
+use serde_json::{json, to_value, Value};
 
 use crate::mc::ModelController;
+
+macro_rules! invoke {
+    ($func:ident, $params:ident) => {{
+        let fn_params = $params.unwrap();
+        let the_params = serde_json::from_value(fn_params).unwrap();
+        let hasil = $func(the_params);
+        serde_json::to_value(hasil).unwrap()
+    }};
+}
 
 #[derive(Deserialize)]
 struct RpcRequest {
@@ -40,18 +49,8 @@ async fn rpc_handler(
     let params = rpc_req.params;
 
     let result: serde_json::Value = match method.as_str() {
-        "add" => {
-            let fn_params = params.unwrap();
-            let the_params = from_value(fn_params).unwrap();
-            let hasil = add(the_params);
-            to_value(hasil).unwrap()
-        }
-        "subtract" => {
-            let fn_params = params.unwrap();
-            let the_params = from_value(fn_params).unwrap();
-            let hasil = subtract(the_params);
-            to_value(hasil).unwrap()
-        }
+        "add" => invoke!(add, params),
+        "subtract" => invoke!(subtract, params),
         _ => to_value("nope!").unwrap(),
     };
 
