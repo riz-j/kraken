@@ -6,6 +6,7 @@
     "@types/bun": "latest"
   },
   "dependencies": {
+    "@types/eventsource": "^1.1.15",
     "eventsource": "^2.0.2",
     "ts-interface-builder": "^0.3.3"
   }
