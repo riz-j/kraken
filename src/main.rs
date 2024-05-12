@@ -1,9 +1,16 @@
 use axum::routing::get_service;
 use axum::Router;
+use axum::{
+    response::sse::{Event, KeepAlive, Sse},
+    routing::get,
+};
+use futures_util::stream::{self, Stream};
 use kraken::mc::ModelController;
 use kraken::routers::auth_router::auth_router;
 use kraken::routers::spa_router;
 use std::error::Error;
+use std::{convert::Infallible, time::Duration};
+use tokio_stream::StreamExt as _;
 use tower_http::cors::CorsLayer;
 use tower_http::services::ServeDir;
 
@@ -30,6 +37,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .layer(CorsLayer::permissive())
         .merge(auth_router())
         .merge(spa_router::office_router())
+        .route("/sse", get(sse_handler))
         .fallback_service(static_router());
 
     axum::Server::bind(&"0.0.0.0:2900".parse().unwrap())
@@ -38,4 +46,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .unwrap();
 
     Ok(())
+}
+
+async fn sse_handler() -> Sse<impl Stream<Item = Result<Event, Infallible>>> {
+    // A `Stream` that repeats an event every second
+    let stream = stream::repeat_with(|| Event::default().data("hi!"))
+        .map(Ok)
+        .throttle(Duration::from_secs(1));
+
+    Sse::new(stream).keep_alive(KeepAlive::default())
 }
